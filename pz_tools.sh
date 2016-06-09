@@ -10,12 +10,12 @@ read -r -d '' WELCOME << EOM
 ###       ######### ###     ### ########  ######## ###     ###
 ==============================================================
 
- --LOCAL DEPLOYMENT----       ^|  --LOCAL SERVICES----
-                              ^|
-   0. EASY START(~30 mins)    ^|    4. Start vagrant boxes
-   1. Clone/Pull projects     ^|    5. Stop vagrant boxes
-   2. Build projects          ^|    6. Destroy vagrant boxes
-   3. Start Piazza projects   ^|    7. List vagrant boxes
+ --LOCAL DEPLOYMENT----       |  --LOCAL SERVICES----
+                              |
+   0. EASY START(~30 mins)    |    4. Start vagrant boxes
+   1. Clone/Pull projects     |    5. Stop vagrant boxes
+   2. Build projects          |    6. Destroy vagrant boxes
+   3. Start Piazza projects   |    7. List vagrant boxes
 
  *Type "h" for help, type "q" to quit
 ______________________________________________________________
