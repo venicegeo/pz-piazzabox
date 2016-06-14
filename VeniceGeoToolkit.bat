@@ -44,7 +44,7 @@ if %Var1%==2 (
 
 rem Start all services in local vagrant boxes
 if %Var1%==3 (
-	start cmd /C "color 0F & echo. & echo ===========Starting jobdb mongoDB instance=========== & cd %PIAZZA%\pz-jobmanager\config & vagrant up jobdb & vagrant status & echo. & echo. & echo. & echo ===========Starting GeoServer=========== & cd ..\..\pz-access\config & vagrant up geoserver & vagrant status & echo. & echo. & echo. & echo ===========Starting PostGIS=========== & cd ..\..\pz-ingest\config & vagrant up postgis & vagrant status & echo. & echo. & echo. & echo ===========Starting ElasticSearch=========== & cd ..\..\pz-search-metadata-ingest\config & vagrant up search & echo. & echo. & echo. & echo ===========Starting Kafka boxes=========== & cd ..\..\kafka-devbox & vagrant up zk & vagrant up ca & vagrant up kafka & vagrant global-status --prune & pause"
+	start cmd /C "color 0F & echo. & echo ===========Starting Kafka boxes=========== & cd %PIAZZA%\kafka-devbox & vagrant up zk & vagrant up ca & vagrant up kafka & echo ===========Starting jobdb mongoDB instance=========== & cd ..\pz-jobmanager\config & vagrant up jobdb & vagrant status & echo. & echo. & echo. & echo ===========Starting GeoServer=========== & cd ..\..\pz-access\config & vagrant up geoserver & vagrant status & echo. & echo. & echo. & echo ===========Starting PostGIS=========== & cd ..\..\pz-ingest\config & vagrant up postgis & vagrant status & echo. & echo. & echo. & echo ===========Starting ElasticSearch=========== & cd ..\..\pz-search-metadata-ingest\config & vagrant up search & echo. & echo. & echo. & vagrant global-status --prune & pause"
 )
 
 rem Start all piazza projects
@@ -68,7 +68,7 @@ if %Var1%==6 (
 )
 
 if %Var1%==7 (
-	start cmd /C "color 0F & echo. & echo List of local VMs: & vagrant global-status & pause"
+	start cmd /C "color 0F & echo. & echo List of local VMs: & vagrant global-status --prune & pause"
 )
 
 if %Var1%==0 (
