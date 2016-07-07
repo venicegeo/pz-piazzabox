@@ -79,7 +79,7 @@ if %Var1%==0 (
 )
 
 if %Var1%==h (
-	start cmd /C "title Piazza Help & echo Following must be installed on the system: & echo ========================================== & echo. & echo Vagrant: https://www.vagrantup.com/ & echo Oracle VM VirtualBox: https://www.virtualbox.org/  & echo Maven 3.3.x: https://maven.apache.org/ & echo You may also set the LOCAL_PIAZZA_REPO_PATH environment variable to point to your preferred local repository directory & echo. & pause"
+	start cmd /C "title Piazza Help & echo Following must be installed on the system: & echo ------------------------------------------ & echo Vagrant: https://www.vagrantup.com/ & echo Oracle VM VirtualBox: https://www.virtualbox.org/  & echo Maven 3.3.x: https://maven.apache.org/ & echo Java jdk1.8.x from http://www.oracle.com & echo. & echo. & echo Following environment variables should be set: & echo ---------------------------------------------- & echo vcap.services.pz-blobstore.credentials.access_key_id & echo vcap.services.pz-blobstore.credentials.secret_access_key & echo vcap.services.pz-geoserver.credentials.s3.access_key_id & echo vcap.services.pz-geoserver.credentials.s3.secret_access_key & echo. & echo *You may also set the LOCAL_PIAZZA_REPO_PATH environment variable to point to your preferred local directory containing existing repositories & echo. & pause"
 )
 
 else (
