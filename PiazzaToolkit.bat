@@ -38,7 +38,7 @@ REM creating required folders.
 if not exist %LOCAL_PIAZZA_REPO_PATH% (mkdir %LOCAL_PIAZZA_REPO_PATH%)
 
 if %Var1%==1 (
-	start cmd /C "title Cloning piazza repositories & echo Cloning piazza repositories... & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & git clone https://github.com/venicegeo/pz-gateway.git & git clone https://github.com/venicegeo/pz-ingest.git & git clone https://github.com/venicegeo/pz-access.git & git clone https://github.com/venicegeo/pz-jobmanager.git & git clone https://github.com/venicegeo/pz-search-metadata-ingest.git & git clone https://github.com/venicegeo/pz-servicecontroller.git & git clone https://github.com/venicegeo/kafka-devbox.git & echo. & 	cd pz-gateway & echo pz-gateway update & git pull & echo. & cd ../pz-access & echo pz-access update & git pull & echo. & cd ../pz-ingest & echo pz-ingest update & git pull & echo. & cd ../pz-jobmanager & echo pz-jobmanager update & git pull & echo. & cd ../pz-search-metadata-ingest & echo pz-search-metadata-ingest update & git pull & echo. & cd ../pz-servicecontroller & echo pz-servicecontroller update & git pull & echo. & cd ../kafka-devbox & echo kafka-devbox update & git pull & echo. & pause" 
+	start cmd /C "title Cloning piazza repositories & echo Cloning piazza repositories... & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & git clone https://github.com/venicegeo/pz-gateway.git & git clone https://github.com/venicegeo/pz-ingest.git & git clone https://github.com/venicegeo/pz-access.git & git clone https://github.com/venicegeo/pz-jobmanager.git & git clone https://github.com/venicegeo/pz-search-metadata-ingest.git & git clone https://github.com/venicegeo/pz-servicecontroller.git & git clone https://github.com/venicegeo/kafka-devbox.git & git clone https://github.com/venicegeo/pz-logger.git & git clone https://github.com/venicegeo/pz-uuidgen.git & git clone https://github.com/venicegeo/pz-workflow.git & echo. & cd pz-gateway & echo pz-gateway update & git pull & echo. & cd ../pz-access & echo pz-access update & git pull & echo. & cd ../pz-ingest & echo pz-ingest update & git pull & echo. & cd ../pz-jobmanager & echo pz-jobmanager update & git pull & echo. & cd ../pz-search-metadata-ingest & echo pz-search-metadata-ingest update & git pull & echo. & cd ../pz-servicecontroller & echo pz-servicecontroller update & git pull & echo. & cd ../pz-workflow & echo pz-workflow update & git pull & echo. & cd ../pz-uuidgen & echo pz-uuidgen update & git pull & echo. & cd ../pz-logger & echo pz-logger update & git pull & echo. & cd ../kafka-devbox & echo kafka-devbox update & git pull & echo. & pause" 
 )
 
 if %Var1%==2 (
@@ -58,16 +58,30 @@ if %Var1%==4 (
 	start cmd /C "title PZ-JOBMANAGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-jobmanager... & cd pz-jobmanager & mvn spring-boot:run & pause"
 	start cmd /C "title PZ-SEARCH-METADATA-INGEST & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-search-metadata-ingest... & cd pz-search-metadata-ingest & mvn spring-boot:run & pause"
 	start cmd /C "title PZ-SERVICECONTROLLER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-servicecontroller... & cd pz-servicecontroller & mvn spring-boot:run & pause"
+	
+	rem wait couple of seconds before starting go apps, they run on vagrant boxes.
+	timeout /t 30
+	
+	start cmd /C "title PZ-LOGGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-logger... & cd pz-logger\config & vagrant up & pause"
+	
+	rem wait couple of seconds before starting the uuidgen, logger needs to be running.
+	timeout /t 30
+
+	start cmd /C "title PZ-UUIDGEN & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-uuidgen... & cd pz-uuidgen\config & vagrant up & pause"
+	rem wait couple of seconds before starting the workflow, logger and uuidgen needs to be running.
+	timeout /t 20
+	
+	start cmd /C "title PZ-WORKFLOW & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-workflow... & cd pz-workflow\config & vagrant up & pause"
 )
 
 rem Gracefully shutdown of all running vagrant services created by piazza toolkit
 if %Var1%==5 (
-	start cmd /C "echo. & echo ===========Stopping Jobdb MongoDB=========== & cd %LOCAL_PIAZZA_REPO_PATH%\pz-jobmanager\config & vagrant halt jobdb & vagrant status & echo. & echo. & echo. & echo ===========Stopping GeoServer=========== & cd ..\..\pz-access\config & vagrant halt geoserver & vagrant status & echo. & echo. & echo. & echo ===========Stopping PostGIS=========== & cd ..\..\pz-ingest\config & vagrant halt postgis & vagrant status & echo. & echo. & echo. & echo ===========Stopping ElasticSearch=========== & cd ..\..\pz-search-metadata-ingest\config & vagrant halt search & vagrant status & echo. & echo. & echo. & echo ===========Suspending Kafka Boxes=========== & cd ..\..\kafka-devbox & vagrant suspend kafka & vagrant suspend ca & vagrant suspend zk & vagrant global-status & pause"
+	start cmd /C "echo. & echo ===========Stopping Jobdb MongoDB=========== & cd %LOCAL_PIAZZA_REPO_PATH%\pz-jobmanager\config & vagrant halt jobdb & vagrant status & echo. & echo. & echo. & echo ===========Stopping GeoServer=========== & cd ..\..\pz-access\config & vagrant halt geoserver & vagrant status & echo. & echo. & echo. & echo ===========Stopping PostGIS=========== & cd ..\..\pz-ingest\config & vagrant halt postgis & vagrant status & echo. & echo. & echo. & echo ===========Stopping ElasticSearch=========== & cd ..\..\pz-search-metadata-ingest\config & vagrant halt search & vagrant status & echo. & echo. & echo. & echo ===========Suspending Kafka Boxes=========== & cd ..\..\kafka-devbox & vagrant suspend kafka & vagrant suspend ca & vagrant suspend zk & echo. & echo. & echo. & echo ===========Suspending Workflow VM=========== & cd ..\pz-workflow\config & vagrant suspend workflow & echo. & echo. & echo. & echo ===========Suspending Uuidgen VM=========== & cd ..\..\pz-uuidgen\config & vagrant suspend uuid & echo. & echo. & echo. & echo ===========Suspending Logger VM=========== & cd ..\..\pz-logger\config & vagrant suspend logger & vagrant global-status & pause"
 )
 
 rem Destroy all vagrant boxes created by piazza toolkit
 if %Var1%==6 (
-	start cmd /C "echo. & echo ===========Destroying jobdb mongoDB instance=========== & cd %LOCAL_PIAZZA_REPO_PATH%\pz-jobmanager\config & vagrant destroy -f jobdb & vagrant status & echo. & echo. & echo. & echo ===========Destroying GeoServer=========== & cd ..\..\pz-access\config & vagrant destroy -f geoserver & vagrant status & echo. & echo. & echo. & echo ===========Destroying PostGIS=========== & cd ..\..\pz-ingest\config & vagrant destroy -f postgis & vagrant status & echo. & echo. & echo. & echo ===========Destroying ElasticSearch=========== & cd ..\..\pz-search-metadata-ingest\config & vagrant destroy -f search & echo. & echo. & echo. & echo ===========Destroying Kafka boxes=========== & cd ..\..\kafka-devbox & vagrant destroy -f kafka & vagrant destroy -f ca & vagrant destroy -f zk & vagrant global-status & pause"
+	start cmd /C "echo. & echo ===========Destroying jobdb mongoDB instance=========== & cd %LOCAL_PIAZZA_REPO_PATH%\pz-jobmanager\config & vagrant destroy -f jobdb & vagrant status & echo. & echo. & echo. & echo ===========Destroying GeoServer=========== & cd ..\..\pz-access\config & vagrant destroy -f geoserver & vagrant status & echo. & echo. & echo. & echo ===========Destroying PostGIS=========== & cd ..\..\pz-ingest\config & vagrant destroy -f postgis & vagrant status & echo. & echo. & echo. & echo ===========Destroying ElasticSearch=========== & cd ..\..\pz-search-metadata-ingest\config & vagrant destroy -f search & echo. & echo. & echo. & echo ===========Destroying Kafka boxes=========== & cd ..\..\kafka-devbox & vagrant destroy -f kafka & vagrant destroy -f ca & vagrant destroy -f zk & echo ===========Destroying PZ-Workflow Box=========== & cd ..\pz-workflow\config & vagrant destroy -f workflow & echo ===========Destroying PZ-Uuidgen Box=========== & cd ..\..\pz-uuidgen\config & vagrant destroy -f uuid & echo ===========Destroying PZ-Logger Box=========== & cd ..\..\pz-logger\config & vagrant destroy -f logger & vagrant global-status & pause"
 )
 
 if %Var1%==7 (
