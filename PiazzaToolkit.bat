@@ -48,6 +48,18 @@ if %Var1%==2 (
 rem Start all services in local vagrant boxes
 if %Var1%==3 (
 	start cmd /C "echo. & echo ===========Starting Kafka boxes=========== & cd %LOCAL_PIAZZA_REPO_PATH%\kafka-devbox & vagrant up zk & vagrant up ca & vagrant up kafka & echo ===========Starting jobdb mongoDB instance=========== & cd ..\pz-jobmanager\config & vagrant up jobdb & vagrant status & echo. & echo. & echo. & echo ===========Starting GeoServer=========== & cd ..\..\pz-access\config & vagrant up geoserver & vagrant status & echo. & echo. & echo. & echo ===========Starting PostGIS=========== & cd ..\..\pz-ingest\config & vagrant up postgis & vagrant status & echo. & echo. & echo. & echo ===========Starting ElasticSearch=========== & cd ..\..\pz-search-metadata-ingest\config & vagrant up search & echo. & echo. & echo. & vagrant global-status --prune & pause"
+
+	rem starting GO apps
+	start cmd /C "title PZ-LOGGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-logger... & cd pz-logger\config & vagrant up & pause"
+	
+	rem wait couple of seconds before starting the uuidgen, logger needs to be running.
+	timeout /t 40
+
+	start cmd /C "title PZ-UUIDGEN & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-uuidgen... & cd pz-uuidgen\config & vagrant up & pause"
+	rem wait couple of seconds before starting the workflow, logger and uuidgen needs to be running.
+	timeout /t 30
+	
+	start cmd /C "title PZ-WORKFLOW & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-workflow... & cd pz-workflow\config & vagrant up & pause"	
 )
 
 rem Start all piazza projects
@@ -58,10 +70,8 @@ if %Var1%==4 (
 	start cmd /C "title PZ-JOBMANAGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-jobmanager... & cd pz-jobmanager & mvn spring-boot:run & pause"
 	start cmd /C "title PZ-SEARCH-METADATA-INGEST & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-search-metadata-ingest... & cd pz-search-metadata-ingest & mvn spring-boot:run & pause"
 	start cmd /C "title PZ-SERVICECONTROLLER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-servicecontroller... & cd pz-servicecontroller & mvn spring-boot:run & pause"
-	
-	rem wait couple of seconds before starting go apps, they run on vagrant boxes.
-	timeout /t 30
-	
+
+	rem starting all GO apps in VMs
 	start cmd /C "title PZ-LOGGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-logger... & cd pz-logger\config & vagrant up & pause"
 	
 	rem wait couple of seconds before starting the uuidgen, logger needs to be running.
@@ -76,7 +86,13 @@ if %Var1%==4 (
 
 rem Gracefully shutdown of all running vagrant services created by piazza toolkit
 if %Var1%==5 (
-	start cmd /C "echo. & echo ===========Stopping Jobdb MongoDB=========== & cd %LOCAL_PIAZZA_REPO_PATH%\pz-jobmanager\config & vagrant halt jobdb & vagrant status & echo. & echo. & echo. & echo ===========Stopping GeoServer=========== & cd ..\..\pz-access\config & vagrant halt geoserver & vagrant status & echo. & echo. & echo. & echo ===========Stopping PostGIS=========== & cd ..\..\pz-ingest\config & vagrant halt postgis & vagrant status & echo. & echo. & echo. & echo ===========Stopping ElasticSearch=========== & cd ..\..\pz-search-metadata-ingest\config & vagrant halt search & vagrant status & echo. & echo. & echo. & echo ===========Suspending Kafka Boxes=========== & cd ..\..\kafka-devbox & vagrant suspend kafka & vagrant suspend ca & vagrant suspend zk & echo. & echo. & echo. & echo ===========Suspending Workflow VM=========== & cd ..\pz-workflow\config & vagrant suspend workflow & echo. & echo. & echo. & echo ===========Suspending Uuidgen VM=========== & cd ..\..\pz-uuidgen\config & vagrant suspend uuid & echo. & echo. & echo. & echo ===========Suspending Logger VM=========== & cd ..\..\pz-logger\config & vagrant suspend logger & vagrant global-status & pause"
+	rem stopping kafka / mongodb / geoserver / postgis / elasticsearch
+	start cmd /C "echo. & echo ===========Stopping Jobdb MongoDB=========== & cd %LOCAL_PIAZZA_REPO_PATH%\pz-jobmanager\config & vagrant halt jobdb & vagrant status & echo. & echo. & echo. & echo ===========Stopping GeoServer=========== & cd ..\..\pz-access\config & vagrant halt geoserver & vagrant status & echo. & echo. & echo. & echo ===========Stopping PostGIS=========== & cd ..\..\pz-ingest\config & vagrant halt postgis & vagrant status & echo. & echo. & echo. & echo ===========Stopping ElasticSearch=========== & cd ..\..\pz-search-metadata-ingest\config & vagrant halt search & vagrant status & echo. & echo. & echo. & echo ===========Suspending Kafka Boxes=========== & cd ..\..\kafka-devbox & vagrant suspend kafka & vagrant suspend ca & vagrant suspend zk & echo. & vagrant global-status & pause"
+	
+	rem shutting down GO apps running VMs
+	start cmd /C "title PZ-LOGGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Stopping pz-logger... & cd pz-logger\config & vagrant halt & vagrant status & pause"
+	start cmd /C "title PZ-UUIDGEN & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Stopping pz-uuidgen... & cd pz-uuidgen\config & vagrant halt & vagrant status & pause"
+	start cmd /C "title PZ-WORKFLOW & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Stopping pz-workflow... & cd pz-workflow\config & vagrant halt & vagrant status & pause"
 )
 
 rem Destroy all vagrant boxes created by piazza toolkit
