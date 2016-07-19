@@ -13,7 +13,7 @@ echo #+#          #+#    #+#     #+#  #+#       #+#     #+#     #+#
 echo ###       ######### ###     ### ########  ######## ###     ### 
 echo ==============================================================
 echo.
-echo  --LOCAL DEPLOYMENT----       ^|  --LOCAL SERVICES----
+echo    --LOCAL APPS----           ^|    --LOCAL SERVICES----
 echo                               ^|
 echo    0. EASY START(~30 mins)    ^|    3. Start vagrant boxes
 echo    1. Clone/Pull projects     ^|    5. Stop vagrant boxes
@@ -47,19 +47,19 @@ if %Var1%==2 (
 
 rem Start all services in local vagrant boxes
 if %Var1%==3 (
-	start cmd /C "echo. & echo ===========Starting Kafka boxes=========== & cd %LOCAL_PIAZZA_REPO_PATH%\kafka-devbox & vagrant up zk & vagrant up ca & vagrant up kafka & echo ===========Starting jobdb mongoDB instance=========== & cd ..\pz-jobmanager\config & vagrant up jobdb & vagrant status & echo. & echo. & echo. & echo ===========Starting GeoServer=========== & cd ..\..\pz-access\config & vagrant up geoserver & vagrant status & echo. & echo. & echo. & echo ===========Starting PostGIS=========== & cd ..\..\pz-ingest\config & vagrant up postgis & vagrant status & echo. & echo. & echo. & echo ===========Starting ElasticSearch=========== & cd ..\..\pz-search-metadata-ingest\config & vagrant up search & echo. & echo. & echo. & vagrant global-status --prune & pause"
+	start cmd /C "echo. & echo ===========Starting ElasticSearch=========== & cd %LOCAL_PIAZZA_REPO_PATH%\pz-search-metadata-ingest\config & vagrant up search & echo. & echo. & echo. & echo ===========Starting Kafka boxes=========== & cd ..\..\kafka-devbox & vagrant up zk & vagrant up ca & vagrant up kafka & echo ===========Starting jobdb mongoDB instance=========== & cd ..\pz-jobmanager\config & vagrant up jobdb & vagrant status & echo. & echo. & echo. & echo ===========Starting GeoServer=========== & cd ..\..\pz-access\config & vagrant up geoserver & vagrant status & echo. & echo. & echo. & echo ===========Starting PostGIS=========== & cd ..\..\pz-ingest\config & vagrant up postgis & vagrant status & echo. & echo. & echo. & echo ===========Starting Logger=========== & cd ..\..\pz-logger\config & vagrant up & vagrant reload & echo. & echo. & echo. & echo ===========Starting pz-uuidgen=========== & cd ..\..\pz-uuidgen\config & vagrant up & vagrant reload & echo. & echo. & echo. & echo ===========Starting pz-workflow=========== & cd ..\..\pz-workflow\config & vagrant up & vagrant reload & vagrant global-status --prune & pause"
 
 	rem starting GO apps
-	start cmd /C "title PZ-LOGGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-logger... & cd pz-logger\config & vagrant up & pause"
+	rem start cmd /C "title PZ-LOGGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-logger... & cd pz-logger\config & vagrant up & pause"
 	
 	rem wait couple of seconds before starting the uuidgen, logger needs to be running.
-	timeout /t 40
+	rem timeout /t 40
 
-	start cmd /C "title PZ-UUIDGEN & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-uuidgen... & cd pz-uuidgen\config & vagrant up & pause"
+	rem start cmd /C "title PZ-UUIDGEN & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-uuidgen... & cd pz-uuidgen\config & vagrant up & pause"
 	rem wait couple of seconds before starting the workflow, logger and uuidgen needs to be running.
-	timeout /t 30
+	rem timeout /t 30
 	
-	start cmd /C "title PZ-WORKFLOW & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-workflow... & cd pz-workflow\config & vagrant up & pause"	
+	rem start cmd /C "title PZ-WORKFLOW & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-workflow... & cd pz-workflow\config & vagrant up & pause"	
 )
 
 rem Start all piazza projects
@@ -72,16 +72,16 @@ if %Var1%==4 (
 	start cmd /C "title PZ-SERVICECONTROLLER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-servicecontroller... & cd pz-servicecontroller & mvn spring-boot:run & pause"
 
 	rem starting all GO apps in VMs
-	start cmd /C "title PZ-LOGGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-logger... & cd pz-logger\config & vagrant up & pause"
+	rem start cmd /C "title PZ-LOGGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-logger... & cd pz-logger\config & vagrant up & pause"
 	
 	rem wait couple of seconds before starting the uuidgen, logger needs to be running.
-	timeout /t 30
+	rem timeout /t 30
 
-	start cmd /C "title PZ-UUIDGEN & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-uuidgen... & cd pz-uuidgen\config & vagrant up & pause"
+	rem start cmd /C "title PZ-UUIDGEN & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-uuidgen... & cd pz-uuidgen\config & vagrant up & pause"
 	rem wait couple of seconds before starting the workflow, logger and uuidgen needs to be running.
-	timeout /t 20
+	rem timeout /t 20
 	
-	start cmd /C "title PZ-WORKFLOW & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-workflow... & cd pz-workflow\config & vagrant up & pause"
+	rem start cmd /C "title PZ-WORKFLOW & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-workflow... & cd pz-workflow\config & vagrant up & pause"
 )
 
 rem Gracefully shutdown of all running vagrant services created by piazza toolkit
