@@ -44,13 +44,19 @@ if %Var1%==1 (
 )
 
 if %Var1%==2 (
-	start cmd /C "title Building piazza projects & cd %LOCAL_PIAZZA_REPO_PATH% & echo =====Building pz-jobcommon===== & cd pz-jobcommon & mvn clean install & echo. & echo. & echo. & echo. & echo =====Building pz-gateway===== & cd ../pz-gateway & mvn clean install & echo. & echo. & echo. & echo. & echo =====Building pz-access===== & cd ../pz-access & mvn clean install & echo. & echo. & echo. & echo. & echo =====Building pz-ingest===== & cd ../pz-ingest & mvn clean install & echo. & echo. & echo. & echo. & echo =====Building pz-jobmanager===== & cd ../pz-jobmanager & mvn clean install & echo. & echo. & echo. & echo. & echo =====Building pz-search-metadata-ingest===== & cd ../pz-search-metadata-ingest & mvn clean install & echo. & echo. & echo. & echo. & echo =====Building pz-servicecontroller===== & cd ../pz-servicecontroller/mainServiceController & mvn clean install & pause"
+	start cmd /C "title Building piazza projects & cd %LOCAL_PIAZZA_REPO_PATH% & echo ==========Building pz-jobcommon========== & cd pz-jobcommon & mvn clean install & echo. & echo. & echo. & echo. & echo. & timeout /t 2 & echo ==========Building pz-gateway========== & cd ../pz-gateway & mvn clean install & echo. & echo. & echo. & echo. & echo. & timeout /t 2 & echo ==========Building pz-access========== & cd ../pz-access & mvn clean install & echo. & echo. & echo. & echo. & echo. & timeout /t 2 & echo ==========Building pz-ingest========== & cd ../pz-ingest & mvn clean install & echo. & echo. & echo. & echo. & echo. & timeout /t 2 & echo ==========Building pz-jobmanager========== & cd ../pz-jobmanager & mvn clean install & echo. & echo. & echo. & echo. & echo. & timeout /t 2 & echo ==========Building pz-search-metadata-ingest========== & cd ../pz-search-metadata-ingest & mvn clean install & echo. & echo. & echo. & echo. & echo. & timeout /t 2 & echo ==========Building pz-servicecontroller========== & cd ../pz-servicecontroller/mainServiceController & mvn clean install & pause"
 	
 	rem timer for cmd auto exit>> & Choice /M "Keep shell prompt open for debugging? Auto closing in 20 seconds..." /t 20 /D N & (If Errorlevel 2 exit)
 )
 
 rem Start all services in local vagrant boxes
 if %Var1%==3 (
+
+	vagrant plugin list | findstr /m "vagrant-hostsupdater" 
+	if %errorlevel%==1 ( 
+	echo vagrant-hostsupdater plugin not found, installing... & vagrant plugin install vagrant-hostsupdater
+	) 
+
 	start cmd /C "title Starting Piazza Services & echo. & echo ===========Starting ElasticSearch=========== & cd %LOCAL_PIAZZA_REPO_PATH%\pz-search-metadata-ingest\config & vagrant up search & echo. & echo. & echo. & echo ===========Starting Kafka boxes=========== & cd ..\..\kafka-devbox & vagrant up zk & vagrant up ca & vagrant up kafka & echo. & echo. & echo. & echo ===========Starting jobdb mongoDB instance=========== & cd ..\pz-jobmanager\config & vagrant up jobdb & vagrant status & echo. & echo. & echo. & echo ===========Starting GeoServer=========== & cd ..\..\pz-access\config & vagrant up geoserver & vagrant status & echo. & echo. & echo. & echo ===========Starting PostGIS=========== & cd ..\..\pz-ingest\config & vagrant up postgis & vagrant status & echo. & echo. & echo. & echo ===========Starting Logger=========== & cd ..\..\pz-logger\config & vagrant up & vagrant reload & echo. & echo. & echo. & echo ===========Starting pz-uuidgen=========== & cd ..\..\pz-uuidgen\config & vagrant up & vagrant reload & echo. & echo. & echo. & echo ===========Starting pz-workflow=========== & cd ..\..\pz-workflow\config & vagrant up & vagrant reload & vagrant global-status --prune & pause"
 
 	rem starting GO apps
@@ -113,7 +119,7 @@ if %Var1%==0 (
 )
 
 if %Var1%==h (
-	start cmd /C "title Piazza Help & echo Following must be installed on the system: & echo ------------------------------------------ & echo -Vagrant: https://www.vagrantup.com/ & echo -Oracle VM VirtualBox 5.0.10: https://www.virtualbox.org/ & echo -Maven 3.3.x: https://maven.apache.org/ & echo -Java jdk1.8.x from http://www.oracle.com & echo. & echo. & echo Following environment variables should be set: & echo ---------------------------------------------- & echo JAVA_HOME Ex: JAVA_HOME=C:\Program Files\Java\jdk1.8.0_101 & echo vcap.services.pz-blobstore.credentials.access_key_id & echo vcap.services.pz-blobstore.credentials.secret_access_key & echo **You may also set the LOCAL_PIAZZA_REPO_PATH environment variable to point to your preferred local directory containing existing repositories & echo. & pause"
+	start cmd /C "title Piazza Help & echo Following must be installed on the system: & echo ------------------------------------------ & echo -Vagrant: https://www.vagrantup.com/ & echo -Oracle VM VirtualBox 5.0.10: https://www.virtualbox.org/ & echo -Maven 3.3.x: https://maven.apache.org/ & echo -Java jdk1.8.x from http://www.oracle.com & echo. & echo. & echo Following environment variables should be set: & echo ---------------------------------------------- & echo JAVA_HOME Ex: JAVA_HOME=C:\Program Files\Java\jdk1.8.0_101 & echo vcap.services.pz-blobstore.credentials.access_key_id & echo vcap.services.pz-blobstore.credentials.secret_access_key & echo **You may also set the LOCAL_PIAZZA_REPO_PATH environment variable & echo    to point to preferred local directory containing existing repositories & echo. & pause"
 )
 
 else (
