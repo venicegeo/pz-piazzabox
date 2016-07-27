@@ -29,11 +29,16 @@ do
         case $input in
                 0)
                         # TODO
-                        ;;
+                        #;;
+						echo Building piazza projects
+						cd $LOCAL_PIAZZA_REPO_PATH
+						echo $LOCAL_PIAZZA_REPO_PATH
+						echo "$WELCOME"
+						;;
                 1)
                         echo Cloning piazza repositories!
                         echo
-                        cd $PIAZZA
+                        cd $LOCAL_PIAZZA_REPO_PATH
                         git clone https://github.com/venicegeo/pz-gateway.git
                         git clone https://github.com/venicegeo/pz-ingest.git
                         git clone https://github.com/venicegeo/pz-access.git
@@ -74,7 +79,7 @@ do
                         ;;
                 2)
                         echo Building piazza projects
-                        cd $PIAZZA
+                        cd $LOCAL_PIAZZA_REPO_PATH
                         echo =====Building pz-gateway=====
                         cd pz-gateway
                         mvn clean install
@@ -116,18 +121,18 @@ do
                         echo "$WELCOME"
                         ;;
                 3)
-                        osascript -e "tell app \"Terminal\" to do script \"cd $PIAZZA && echo Starting pz-gateway... && cd pz-gateway && java -jar target/piazza-gateway-0.1.0.jar --access.prefix=localhost --jobmanager.prefix=localhost --servicecontroller.port=8088 --servicecontroller.prefix=localhost --servicecontroller.protocol=http\""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $PIAZZA && echo Starting pz-ingest... && cd pz-ingest && mvn spring-boot:run\""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $PIAZZA && echo Starting pz-access... && cd pz-access && mvn spring-boot:run\""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $PIAZZA && echo Starting pz-jobmanager... && cd pz-jobmanager && mvn spring-boot:run\""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $PIAZZA && echo Starting pz-search-metadata-ingest... && cd pz-search-metadata-ingest && mvn spring-boot:run\""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $PIAZZA && echo Starting pz-servicecontroller... && cd pz-servicecontroller && mvn spring-boot:run\""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-gateway... && cd pz-gateway && java -jar target/piazza-gateway-0.1.0.jar --access.prefix=localhost --jobmanager.prefix=localhost --servicecontroller.port=8088 --servicecontroller.prefix=localhost --servicecontroller.protocol=http\""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-ingest... && cd pz-ingest && mvn spring-boot:run\""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-access... && cd pz-access && mvn spring-boot:run\""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-jobmanager... && cd pz-jobmanager && mvn spring-boot:run\""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-metadata-ingest... && cd pz-search-metadata-ingest && mvn spring-boot:run\""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-servicecontroller... && cd pz-servicecontroller && mvn spring-boot:run\""
                         echo "$WELCOME"
                         ;;
                 4)
                         echo
                         echo ===========Starting jobdb mongoDB instance===========
-                        cd $PIAZZA/pz-jobmanager/config
+                        cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
                         vagrant up jobdb
                         vagrant status
                         echo
@@ -164,7 +169,7 @@ do
                 5)
                         echo
                         echo ===========Stopping Jobdb MongoDB===========
-                        cd $PIAZZA/pz-jobmanager/config
+                        cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
                         vagrant halt jobdb
                         vagrant status
                         echo
@@ -202,7 +207,7 @@ do
                 6)
                         echo
                         echo ===========Destroying jobdb mongoDB instance===========
-                        cd $PIAZZA/pz-jobmanager/config
+                        cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
                         vagrant destroy -f jobdb
                         vagrant status
                         echo
