@@ -38,6 +38,7 @@ do
                 1)
                         echo Cloning piazza repositories!
                         echo
+						pwd
                         cd $LOCAL_PIAZZA_REPO_PATH
                         git clone https://github.com/venicegeo/pz-gateway.git
                         git clone https://github.com/venicegeo/pz-ingest.git
@@ -46,6 +47,10 @@ do
                         git clone https://github.com/venicegeo/pz-search-metadata-ingest.git
                         git clone https://github.com/venicegeo/pz-servicecontroller.git
                         git clone https://github.com/venicegeo/kafka-devbox.git
+						git clone https://github.com/venicegeo/pz-logger.git
+						git clone https://github.com/venicegeo/pz-uuidgen.git
+						git clone https://github.com/venicegeo/pz-workflow.git
+						git clone https://github.com/venicegeo/pz-jobcommon.git
                         echo
                         cd pz-gateway
                         echo pz-gateway update
@@ -75,47 +80,76 @@ do
                         echo kafka-devbox update
                         git pull
                         echo
+						cd ../pz-workflow
+						echo pz-workflow update
+						git pull
+						echo
+						cd ../pz-uuidgen
+						echo pz-uuidgen update
+						git pull
+						echo
+						cd ../pz-logger
+						echo pz-logger update
+						git pull
+						echo
+						cd ../pz-jobcommon
+						echo pz-jobcommon update
+						git pull
+						echo
                         echo "$WELCOME"
                         ;;
                 2)
                         echo Building piazza projects
                         cd $LOCAL_PIAZZA_REPO_PATH
-                        echo =====Building pz-gateway=====
+						echo ==========Building pz-jobcommon==========
+						cd pz-jobcommon 
+						mvn clean install
+						echo
+						echo
+						echo
+						echo
+						sleep 2
+                        echo ==========Building pz-gateway==========
                         cd pz-gateway
                         mvn clean install
                         echo
                         echo
                         echo
                         echo
-                        echo =====Building pz-access=====
+						sleep 2
+                        echo ==========Building pz-access==========
                         cd ../pz-access
                         mvn clean install
                         echo
                         echo
                         echo
                         echo
-                        echo =====Building pz-ingest=====
+						sleep 2
+                        echo ==========Building pz-ingest==========
                         cd ../pz-ingest
                         mvn clean install
                         echo
                         echo
                         echo
                         echo
-                        echo =====Building pz-jobmanager=====
+						sleep 2
+                        echo ==========Building pz-jobmanager==========
                         cd ../pz-jobmanager
                         mvn clean install
                         echo
                         echo
                         echo
                         echo
-                        echo =====Building pz-search-metadata-ingest=====
+						sleep 2
+                        echo ==========Building pz-search-metadata-ingest==========
                         cd ../pz-search-metadata-ingest
                         mvn clean install
                         echo
                         echo
                         echo
                         echo
-                        echo =====Building pz-servicecontroller=====
+						sleep 2
+                        echo ==========Building pz-servicecontroller==========
                         cd ../pz-servicecontroller
                         mvn clean install
                         echo "$WELCOME"
@@ -248,13 +282,22 @@ do
                         echo "$WELCOME"
                         ;;
                 h)
-                        echo Following must be installed on the system:
-                        echo ==========================================
-                        echo
-                        echo Vagrant: https://www.vagrantup.com/
-                        echo Oracle VM VirtualBox: https://www.virtualbox.org/
-                        echo Maven 3.3.x: https://maven.apache.org/
-                        echo
+						echo Following must be installed on the system: 
+						echo ------------------------------------------ 
+						echo -Vagrant: https://www.vagrantup.com/ 
+						echo -Oracle VM VirtualBox 5.0.10: https://www.virtualbox.org/ 
+						echo -Maven 3.3.x: https://maven.apache.org/ 
+						echo -Java jdk1.8.x from http://www.oracle.com 
+						echo
+						echo
+						echo Following environment variables should be set: 
+						echo ----------------------------------------------
+						echo JAVA_HOME Ex: JAVA_HOME=C:\Program Files\Java\jdk1.8.0_101 
+						echo vcap.services.pz-blobstore.credentials.access_key_id
+						echo vcap.services.pz-blobstore.credentials.secret_access_key
+						echo **You may also set the LOCAL_PIAZZA_REPO_PATH environment variable
+						echo    to point to preferred local directory containing existing repositories
+						echo	
                         echo "$WELCOME"
                         ;;
                 q)

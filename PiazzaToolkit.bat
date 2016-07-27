@@ -51,7 +51,8 @@ if %Var1%==2 (
 
 rem Start all services in local vagrant boxes
 if %Var1%==3 (
-
+	
+	rem checking for host updater plugin.
 	vagrant plugin list | findstr /m "vagrant-hostsupdater" 
 	if %errorlevel%==1 ( 
 	echo vagrant-hostsupdater plugin not found, installing... & vagrant plugin install vagrant-hostsupdater
