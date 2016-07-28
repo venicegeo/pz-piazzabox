@@ -1,4 +1,6 @@
 #!/bin/bash
+#Auth: Sonny Saniev
+#Desc: Toolkit to manage piazza locally.
 
 read -r -d '' WELCOME << EOM
 ::::::::: :::::::::     :::     ::::::::: ::::::::     :::
@@ -10,12 +12,12 @@ read -r -d '' WELCOME << EOM
 ###       ######### ###     ### ########  ######## ###     ###
 ==============================================================
 
- --LOCAL DEPLOYMENT----       |  --LOCAL SERVICES----
+   --LOCAL DEPLOYMENT----     |    --LOCAL SERVICES----
                               |
-   0. EASY START(~30 mins)    |    4. Start vagrant boxes
+   0. EASY START(~30 mins)    |    3. Start vagrant boxes
    1. Clone/Pull projects     |    5. Stop vagrant boxes
    2. Build projects          |    6. Destroy vagrant boxes
-   3. Start Piazza projects   |    7. List vagrant boxes
+   4. Start Piazza projects   |    7. List vagrant boxes
 
  *Type "h" for help, type "q" to quit
 ______________________________________________________________
@@ -33,6 +35,7 @@ do
 						echo Building piazza projects
 						cd $LOCAL_PIAZZA_REPO_PATH
 						echo $LOCAL_PIAZZA_REPO_PATH
+						pwd
 						echo "$WELCOME"
 						;;
                 1)
@@ -154,7 +157,7 @@ do
                         mvn clean install
                         echo "$WELCOME"
                         ;;
-                3)
+                4)
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-gateway... && cd pz-gateway && java -jar target/piazza-gateway-0.1.0.jar --access.prefix=localhost --jobmanager.prefix=localhost --servicecontroller.port=8088 --servicecontroller.prefix=localhost --servicecontroller.protocol=http\""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-ingest... && cd pz-ingest && mvn spring-boot:run\""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-access... && cd pz-access && mvn spring-boot:run\""
@@ -163,26 +166,28 @@ do
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-servicecontroller... && cd pz-servicecontroller && mvn spring-boot:run\""
                         echo "$WELCOME"
                         ;;
-                4)
-                        echo
+                3)
+						# Checking for host updater plugin.
+						#vagrant plugin list | findstr /m "vagrant-hostsupdater" 
+						#if %errorlevel%==1 ( 
+						#echo vagrant-hostsupdater plugin not found, installing... & vagrant plugin install vagrant-hostsupdater
+						#) 
+                        #echo
                         echo ===========Starting jobdb mongoDB instance===========
                         cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
                         vagrant up jobdb
-                        vagrant status
                         echo
                         echo
                         echo
                         echo ===========Starting GeoServer===========
                         cd ../../pz-access/config
                         vagrant up geoserver
-                        vagrant status
                         echo
                         echo
                         echo
                         echo ===========Starting PostGIS===========
                         cd ../../pz-ingest/config
                         vagrant up postgis
-                        vagrant status
                         echo
                         echo
                         echo
@@ -197,6 +202,27 @@ do
                         vagrant up zk
                         vagrant up ca
                         vagrant up kafka
+                        echo
+                        echo
+                        echo
+						echo ===========Starting Logger===========
+						cd ../pz-logger/config
+						vagrant up
+						vagrant reload
+                        echo
+                        echo
+                        echo
+						echo ===========Starting pz-uuidgen===========
+						cd ../../pz-uuidgen/config
+						vagrant up
+						vagrant reload
+						echo
+						echo
+						echo
+						echo ===========Starting pz-workflow===========
+						cd ../../pz-workflow/config
+						vagrant up
+						vagrant reload
                         vagrant global-status --prune
                         echo "$WELCOME"
                         ;;
@@ -205,28 +231,18 @@ do
                         echo ===========Stopping Jobdb MongoDB===========
                         cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
                         vagrant halt jobdb
-                        vagrant status
                         echo
                         echo
                         echo
                         echo ===========Stopping GeoServer===========
                         cd ../../pz-access/config
                         vagrant halt geoserver
-                        vagrant status
                         echo
                         echo
                         echo
                         echo ===========Stopping PostGIS===========
                         cd ../../pz-ingest/config
                         vagrant halt postgis
-                        vagrant status
-                        echo
-                        echo
-                        echo
-                        echo ===========Stopping ElasticSearch===========
-                        cd ../../pz-search-metadata-ingest/config
-                        vagrant halt search
-                        vagrant status
                         echo
                         echo
                         echo
@@ -235,7 +251,34 @@ do
                         vagrant suspend kafka
                         vagrant suspend ca
                         vagrant suspend zk
-                        vagrant global-status
+						echo
+						echo
+						echo
+						echo ===========Stopping pz-workflow===========
+						cd ../pz-workflow/config
+						vagrant halt
+                        echo
+                        echo
+                        echo
+						echo ===========Stopping pz-uuidgen===========
+						cd ../../pz-uuidgen/config
+						vagrant halt
+                        echo
+                        echo
+                        echo
+						echo ===========Stopping Logger===========
+						cd ../../pz-logger/config
+						vagrant halt
+                        echo
+                        echo
+                        echo
+                        echo ===========Stopping ElasticSearch===========
+                        cd ../../pz-search-metadata-ingest/config
+                        vagrant halt search
+						echo
+						echo
+						echo
+                        vagrant global-status --prune
                         echo "$WELCOME"
                         ;;
                 6)
@@ -261,17 +304,35 @@ do
                         echo
                         echo
                         echo
-                        echo ===========Destroying ElasticSearch===========
-                        cd ../../pz-search-metadata-ingest/config
-                        vagrant destroy -f search
-                        echo
-                        echo
-                        echo
                         echo ===========Destroying Kafka boxes===========
                         cd ../../kafka-devbox
                         vagrant destroy -f kafka
                         vagrant destroy -f ca
                         vagrant destroy -f zk
+						echo
+						echo
+						echo
+						echo ===========Destroying pz-workflow===========
+						cd ../pz-workflow/config
+						vagrant destroy -f workflow
+                        echo
+                        echo
+                        echo
+						echo ===========Destroying pz-uuidgen===========
+						cd ../../pz-uuidgen/config
+						vagrant destroy -f uuid
+                        echo
+                        echo
+                        echo
+						echo ===========Destroying Logger===========
+						cd ../../pz-logger/config
+						vagrant destroy -f logger
+                        echo
+                        echo
+                        echo
+                        echo ===========Destroying ElasticSearch===========
+                        cd ../../pz-search-metadata-ingest/config
+                        vagrant destroy -f search
                         vagrant global-status
                         echo "$WELCOME"
                         ;;
