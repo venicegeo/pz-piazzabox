@@ -2,7 +2,20 @@
 #Auth: Sonny Saniev
 #Desc: Toolkit to manage piazza locally.
 
+if [ -z "$LOCAL_PIAZZA_REPO_PATH" ]; then
+echo "Please create LOCAL_PIAZZA_REPO_PATH env variable and point to an empty or existing directory containing piazza repositories."
+exit 1
+fi
+
+echo current path is
+pwd
+if [ ! -d "$LOCAL_PIAZZA_REPO_PATH" ]; then
+echo FOLDER DOES NOT EXIST............
+fi
+echo
+echo
 read -r -d '' WELCOME << EOM
+==============================================================
 ::::::::: :::::::::     :::     ::::::::: ::::::::     :::
 :+:    :+:   :+:      :+: :+:        :+:       :+:   :+: :+:
 +:+    +:+   +:+     +:+   +:+      +:+       +:+   +:+   +:+
@@ -33,16 +46,21 @@ do
                         # TODO
                         #;;
 						echo Building piazza projects
-						cd $LOCAL_PIAZZA_REPO_PATH
-						echo $LOCAL_PIAZZA_REPO_PATH
+						cd ${LOCAL_PIAZZA_REPO_PATH}
+                        #cd ${LOCAL_PIAZZA_REPO_PATH}/pz-jobmanager/config
+                        echo $LOCAL_PIAZZA_REPO_PATH
 						pwd
+                        echo
+                        echo
+                        echo
 						echo "$WELCOME"
 						;;
                 1)
+                        echo
                         echo Cloning piazza repositories!
                         echo
-						pwd
                         cd $LOCAL_PIAZZA_REPO_PATH
+                        pwd
                         git clone https://github.com/venicegeo/pz-gateway.git
                         git clone https://github.com/venicegeo/pz-ingest.git
                         git clone https://github.com/venicegeo/pz-access.git
@@ -98,10 +116,12 @@ do
 						cd ../pz-jobcommon
 						echo pz-jobcommon update
 						git pull
-						echo
+                        echo
+                        echo
                         echo "$WELCOME"
                         ;;
                 2)
+                        echo
                         echo Building piazza projects
                         cd $LOCAL_PIAZZA_REPO_PATH
 						echo ==========Building pz-jobcommon==========
@@ -153,17 +173,23 @@ do
                         echo
 						sleep 2
                         echo ==========Building pz-servicecontroller==========
-                        cd ../pz-servicecontroller
+                        cd ../pz-servicecontroller/mainServiceController
                         mvn clean install
+                        echo
+                        echo
                         echo "$WELCOME"
                         ;;
                 4)
-                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-gateway... && cd pz-gateway && java -jar target/piazza-gateway-0.1.0.jar --access.prefix=localhost --jobmanager.prefix=localhost --servicecontroller.port=8088 --servicecontroller.prefix=localhost --servicecontroller.protocol=http\""
+#osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-gateway... && cd pz-gateway && java -jar target/piazza-gateway-0.1.0.jar --access.prefix=localhost --jobmanager.prefix=localhost --servicecontroller.port=8088 --servicecontroller.prefix=localhost --servicecontroller.protocol=http\""
+osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-gateway... && cd pz-gateway && mvn spring-boot:run\""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-ingest... && cd pz-ingest && mvn spring-boot:run\""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-access... && cd pz-access && mvn spring-boot:run\""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-jobmanager... && cd pz-jobmanager && mvn spring-boot:run\""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-metadata-ingest... && cd pz-search-metadata-ingest && mvn spring-boot:run\""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-servicecontroller... && cd pz-servicecontroller && mvn spring-boot:run\""
+                        echo
+                        echo
+                        echo
                         echo "$WELCOME"
                         ;;
                 3)
@@ -173,6 +199,8 @@ do
 						#echo vagrant-hostsupdater plugin not found, installing... & vagrant plugin install vagrant-hostsupdater
 						#) 
                         #echo
+                        echo
+                        echo
                         echo ===========Starting jobdb mongoDB instance===========
                         cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
                         vagrant up jobdb
@@ -223,10 +251,15 @@ do
 						cd ../../pz-workflow/config
 						vagrant up
 						vagrant reload
+                        echo
+                        echo
                         vagrant global-status --prune
+                        echo
+                        echo
                         echo "$WELCOME"
                         ;;
                 5)
+                        echo
                         echo
                         echo ===========Stopping Jobdb MongoDB===========
                         cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
@@ -279,6 +312,9 @@ do
 						echo
 						echo
                         vagrant global-status --prune
+                        echo
+                        echo
+                        echo
                         echo "$WELCOME"
                         ;;
                 6)
@@ -334,15 +370,22 @@ do
                         cd ../../pz-search-metadata-ingest/config
                         vagrant destroy -f search
                         vagrant global-status
+                        echo
+                        echo
+                        echo
                         echo "$WELCOME"
                         ;;
                 7)
                         echo
                         echo List of local VMs:
                         vagrant global-status
+                        echo
+                        echo
+                        echo
                         echo "$WELCOME"
                         ;;
                 h)
+                        echo
 						echo Following must be installed on the system: 
 						echo ------------------------------------------ 
 						echo -Vagrant: https://www.vagrantup.com/ 
@@ -358,7 +401,10 @@ do
 						echo vcap.services.pz-blobstore.credentials.secret_access_key
 						echo **You may also set the LOCAL_PIAZZA_REPO_PATH environment variable
 						echo    to point to preferred local directory containing existing repositories
-						echo	
+						echo
+                        echo
+                        echo
+                        sleep 1
                         echo "$WELCOME"
                         ;;
                 q)
