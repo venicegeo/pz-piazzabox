@@ -7,8 +7,8 @@ echo "Please create LOCAL_PIAZZA_REPO_PATH env variable and point to an empty or
 exit 1
 fi
 
-echo current path is
-pwd
+#echo current path is
+#pwd
 if [ ! -d "$LOCAL_PIAZZA_REPO_PATH" ]; then
 echo FOLDER DOES NOT EXIST............
 fi
@@ -44,18 +44,16 @@ do
         case $input in
                 0)
                         # TODO
-                        #;;
-						echo Building piazza projects
-						cd ${LOCAL_PIAZZA_REPO_PATH}
-                        #cd ${LOCAL_PIAZZA_REPO_PATH}/pz-jobmanager/config
-                        echo $LOCAL_PIAZZA_REPO_PATH
-						pwd
+                        echo
+                        echo
+                        echo UNDER CONSTUCTION...
                         echo
                         echo
                         echo
 						echo "$WELCOME"
 						;;
                 1)
+                        echo
                         echo
                         echo Cloning piazza repositories!
                         echo
@@ -117,10 +115,13 @@ do
 						echo pz-jobcommon update
 						git pull
                         echo
+                        echo Update Complete.
+                        echo
                         echo
                         echo "$WELCOME"
                         ;;
                 2)
+                        echo
                         echo
                         echo Building piazza projects
                         cd $LOCAL_PIAZZA_REPO_PATH
@@ -180,10 +181,16 @@ do
                         echo "$WELCOME"
                         ;;
                 4)
-#osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-gateway... && cd pz-gateway && java -jar target/piazza-gateway-0.1.0.jar --access.prefix=localhost --jobmanager.prefix=localhost --servicecontroller.port=8088 --servicecontroller.prefix=localhost --servicecontroller.protocol=http\""
-osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-gateway... && cd pz-gateway && mvn spring-boot:run\""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-ingest... && cd pz-ingest && mvn spring-boot:run\""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-access... && cd pz-access && mvn spring-boot:run\""
+                        echo
+                        echo
+                        echo starting all piazza apps...
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-gateway... && cd pz-gateway && java -jar target/piazza-gateway-0.1.0.jar --access.prefix=localhost --jobmanager.prefix=localhost --servicecontroller.port=8088 --servicecontroller.prefix=localhost --servicecontroller.protocol=http\""
+
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-ingest... && cd pz-ingest && java -jar target/piazza-ingest-0.1.0.jar --vcap.services.pz-blobstore.credentials.access_key_id=${BLOBSTORE_ACCESS_KEY} --vcap.services.pz-blobstore.credentials.secret_access_key=${BLOBSTORE_SECRET_ACCESS_KEY} \""
+
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-access... && cd pz-access && java -jar target/piazza-access-0.1.0.jar --vcap.services.pz-blobstore.credentials.access_key_id=${BLOBSTORE_ACCESS_KEY} --vcap.services.pz-blobstore.credentials.secret_access_key=${BLOBSTORE_SECRET_ACCESS_KEY} \""
+
+
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-jobmanager... && cd pz-jobmanager && mvn spring-boot:run\""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-metadata-ingest... && cd pz-search-metadata-ingest && mvn spring-boot:run\""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-servicecontroller... && cd pz-servicecontroller && mvn spring-boot:run\""
@@ -193,13 +200,13 @@ osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH &&
                         echo "$WELCOME"
                         ;;
                 3)
-						# Checking for host updater plugin.
-						#vagrant plugin list | findstr /m "vagrant-hostsupdater" 
-						#if %errorlevel%==1 ( 
-						#echo vagrant-hostsupdater plugin not found, installing... & vagrant plugin install vagrant-hostsupdater
-						#) 
-                        #echo
                         echo
+                        echo
+                        if ! vagrant plugin list | grep -q "vagrant-hostsupdater"
+                        then
+                            echo vagrant-hostsupdater plugin is missing, trying ot install.
+                            vagrant plugin install vagrant-hostsupdater
+                        fi
                         echo
                         echo ===========Starting jobdb mongoDB instance===========
                         cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
@@ -396,12 +403,16 @@ osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH &&
 						echo
 						echo Following environment variables should be set: 
 						echo ----------------------------------------------
-						echo JAVA_HOME Ex: JAVA_HOME=C:\Program Files\Java\jdk1.8.0_101 
-						echo vcap.services.pz-blobstore.credentials.access_key_id
-						echo vcap.services.pz-blobstore.credentials.secret_access_key
-						echo **You may also set the LOCAL_PIAZZA_REPO_PATH environment variable
+						echo JAVA_HOME Ex: export JAVA_HOME=C:\Program Files\Java\jdk1.8.0_101
+                        echo
+                        echo Amazon web services access keys:
+                        echo    export BLOBSTORE_ACCESS_KEY=abc
+                        echo    export BLOBSTORE_SECRET_ACCESS_KEY=abcd
+                        echo
+						echo You may also set the LOCAL_PIAZZA_REPO_PATH environment variable
 						echo    to point to preferred local directory containing existing repositories
 						echo
+                        echo To persist the env variables, please add them to ~/.bash_profile, re-login.
                         echo
                         echo
                         sleep 1
