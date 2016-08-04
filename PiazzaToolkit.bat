@@ -84,13 +84,8 @@ if %Var1%==4 (
 
 rem Gracefully shutdown of all running vagrant services created by piazza toolkit
 if %Var1%==5 (
-	rem stopping kafka / mongodb / geoserver / postgis / elasticsearch
-	start cmd /C "echo. & echo ===========Stopping Jobdb MongoDB=========== & cd %LOCAL_PIAZZA_REPO_PATH%\pz-jobmanager\config & vagrant halt jobdb & vagrant status & echo. & echo. & echo. & echo ===========Stopping GeoServer=========== & cd ..\..\pz-access\config & vagrant halt geoserver & vagrant status & echo. & echo. & echo. & echo ===========Stopping PostGIS=========== & cd ..\..\pz-ingest\config & vagrant halt postgis & vagrant status & echo. & echo. & echo. & echo ===========Stopping ElasticSearch=========== & cd ..\..\pz-search-metadata-ingest\config & vagrant halt search & vagrant status & echo. & echo. & echo. & echo ===========Suspending Kafka Boxes=========== & cd ..\..\kafka-devbox & vagrant suspend kafka & vagrant suspend ca & vagrant suspend zk & echo. & vagrant global-status & pause"
-	
-	rem shutting down GO apps running VMs
-	start cmd /C "title PZ-LOGGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Stopping pz-logger... & cd pz-logger\config & vagrant halt & vagrant status & pause"
-	start cmd /C "title PZ-UUIDGEN & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Stopping pz-uuidgen... & cd pz-uuidgen\config & vagrant halt & vagrant status & pause"
-	start cmd /C "title PZ-WORKFLOW & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Stopping pz-workflow... & cd pz-workflow\config & vagrant halt & vagrant status & pause"
+	rem stopping kafka / mongodb / geoserver / postgis / elasticsearch / logger / uuidgen / workflow
+	start cmd /C "echo. & echo ===========Stopping Jobdb MongoDB=========== & cd %LOCAL_PIAZZA_REPO_PATH%\pz-jobmanager\config & vagrant halt jobdb & vagrant status & echo. & echo. & echo. & echo ===========Stopping GeoServer=========== & cd ..\..\pz-access\config & vagrant halt geoserver & vagrant status & echo. & echo. & echo. & echo ===========Stopping PostGIS=========== & cd ..\..\pz-ingest\config & vagrant halt postgis & vagrant status & echo. & echo. & echo. & echo ===========Stopping ElasticSearch=========== & cd ..\..\pz-search-metadata-ingest\config & vagrant halt search & vagrant status & echo. & echo. & echo. & echo ===========Suspending Kafka Boxes=========== & cd ..\..\kafka-devbox & vagrant suspend kafka & vagrant suspend ca & vagrant suspend zk & echo. & echo. & echo. & echo ===========Stopping Workflow=========== & cd ..\pz-workflow\config & vagrant halt & vagrant status & echo. & echo. & echo. & echo. & echo ===========Stopping UUIDGEN=========== & cd ..\..\pz-uuidgen\config & vagrant halt & vagrant status & echo. & echo. & echo. & echo. & echo ===========Stopping PZ_Logger=========== & cd ..\pz-logger\config & vagrant halt & vagrant status & echo. & vagrant global-status & pause"
 )
 
 rem Destroy all vagrant boxes created by piazza toolkit
