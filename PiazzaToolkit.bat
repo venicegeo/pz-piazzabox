@@ -45,7 +45,6 @@ if %Var1%==1 (
 
 if %Var1%==2 (
 	start cmd /C "title Building piazza projects & cd %LOCAL_PIAZZA_REPO_PATH% & echo ==========Building pz-jobcommon========== & cd pz-jobcommon & mvn clean install & echo. & echo. & echo. & echo. & echo. & timeout /t 2 & echo ==========Building pz-gateway========== & cd ../pz-gateway & mvn clean install & echo. & echo. & echo. & echo. & echo. & timeout /t 2 & echo ==========Building pz-access========== & cd ../pz-access & mvn clean install & echo. & echo. & echo. & echo. & echo. & timeout /t 2 & echo ==========Building pz-ingest========== & cd ../pz-ingest & mvn clean install & echo. & echo. & echo. & echo. & echo. & timeout /t 2 & echo ==========Building pz-jobmanager========== & cd ../pz-jobmanager & mvn clean install & echo. & echo. & echo. & echo. & echo. & timeout /t 2 & echo ==========Building pz-search-metadata-ingest========== & cd ../pz-search-metadata-ingest & mvn clean install & echo. & echo. & echo. & echo. & echo. & timeout /t 2 & echo ==========Building pz-servicecontroller========== & cd ../pz-servicecontroller/mainServiceController & mvn clean install & pause"
-	
 	rem timer for cmd auto exit>> & Choice /M "Keep shell prompt open for debugging? Auto closing in 20 seconds..." /t 20 /D N & (If Errorlevel 2 exit)
 )
 
@@ -75,24 +74,12 @@ if %Var1%==3 (
 
 rem Start all piazza projects
 if %Var1%==4 (
-	start cmd /C "title PZ-GATEWAY & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-gateway... & cd pz-gateway & java -jar target/piazza-gateway-0.1.0.jar --access.prefix=localhost --jobmanager.prefix=localhost --servicecontroller.port=8088 --servicecontroller.prefix=localhost --servicecontroller.protocol=http & pause"
-	start cmd /C "title PZ-INGEST & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-ingest... & cd pz-ingest & mvn spring-boot:run & pause"
-	start cmd /C "title PZ-ACCESS & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-access... & cd pz-access & mvn spring-boot:run & pause"
-	start cmd /C "title PZ-JOBMANAGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-jobmanager... & cd pz-jobmanager & mvn spring-boot:run & pause"
-	start cmd /C "title PZ-SEARCH-METADATA-INGEST & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-search-metadata-ingest... & cd pz-search-metadata-ingest & mvn spring-boot:run & pause"
-	start cmd /C "title PZ-SERVICECONTROLLER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-servicecontroller... & cd pz-servicecontroller & mvn spring-boot:run & pause"
-
-	rem starting all GO apps in VMs
-	rem start cmd /C "title PZ-LOGGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-logger... & cd pz-logger\config & vagrant up & pause"
-	
-	rem wait couple of seconds before starting the uuidgen, logger needs to be running.
-	rem timeout /t 30
-
-	rem start cmd /C "title PZ-UUIDGEN & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-uuidgen... & cd pz-uuidgen\config & vagrant up & pause"
-	rem wait couple of seconds before starting the workflow, logger and uuidgen needs to be running.
-	rem timeout /t 20
-	
-	rem start cmd /C "title PZ-WORKFLOW & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-workflow... & cd pz-workflow\config & vagrant up & pause"
+	start cmd /C "title PZ-GATEWAY & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-gateway... & cd pz-gateway & java -jar target/piazza-gateway-0.1.0.jar --access.prefix=localhost --jobmanager.prefix=localhost --servicecontroller.port=8088 --servicecontroller.prefix=localhost --servicecontroller.protocol=http --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 --workflow.url=http://192.168.50.50:14400 & pause"
+	start cmd /C "title PZ-INGEST & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-ingest... & cd pz-ingest & java -jar target/piazza-ingest-0.1.0.jar --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 --workflow.url=http://192.168.50.50:14400 & pause"
+ 	start cmd /C "title PZ-ACCESS & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-access... & cd pz-access & java -jar target/piazza-access-0.1.0.jar --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 & pause"
+ 	start cmd /C "title PZ-JOBMANAGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-jobmanager... & cd pz-jobmanager & java -jar target/piazza-jobmanager-0.1.0.jar --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 & pause"
+ 	start cmd /C "title PZ-SEARCH-METADATA-INGEST & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-search-metadata-ingest... & cd pz-search-metadata-ingest & java -jar target/pz-search-metadata-ingest-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 & pause"
+ 	start cmd /C "title PZ-SERVICECONTROLLER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-servicecontroller... & cd pz-servicecontroller & java -jar mainServiceController/target/piazzaServiceController-1.0.0.BUILD-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 & pause"
 )
 
 rem Gracefully shutdown of all running vagrant services created by piazza toolkit
