@@ -205,8 +205,9 @@ do
                         fi
                         echo
 						# below line should start all on a new terminal
-						#osascript -e "tell app \"Terminal\" to do script \"echo ===========Starting jobdb mongoDB instance=========== && cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config && vagrant up jobdb && echo && echo && echo ===========Starting GeoServer=========== && cd ../../pz-access/config && vagrant up geoserver && echo && echo && echo && echo ===========Starting PostGIS=========== && cd ../../pz-ingest/config && vagrant up postgis && echo && echo && echo && echo ===========Starting ElasticSearch=========== && cd ../../pz-search-metadata-ingest/config && vagrant up search && echo && echo && echo  && echo ===========Starting Kafka boxes=========== && cd ../../kafka-devbox && vagrant up zk && vagrant up ca && vagrant up kafka && echo && echo && echo && echo ===========Starting Logger=========== && cd ../pz-logger/config && vagrant up && vagrant reload && echo && echo && echo && echo ===========Starting pz-uuidgen=========== && cd ../../pz-uuidgen/config && vagrant up && vagrant reload && echo && echo && echo && echo ===========Starting pz-workflow=========== && cd ../../pz-workflow/config && vagrant up && vagrant reload && echo && echo && vagrant global-status --prune && echo && echo\""
-					
+						osascript -e "tell app \"Terminal\" to do script \"echo ===========Starting jobdb mongoDB instance=========== && cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config && vagrant up jobdb && echo && echo && echo ===========Starting GeoServer=========== && cd ../../pz-access/config && vagrant up geoserver && echo && echo && echo && echo ===========Starting PostGIS=========== && cd ../../pz-ingest/config && vagrant up postgis && echo && echo && echo && echo ===========Starting ElasticSearch=========== && cd ../../pz-search-metadata-ingest/config && vagrant up search && echo && echo && echo  && echo ===========Starting Kafka boxes=========== && cd ../../kafka-devbox && vagrant up zk && vagrant up ca && vagrant up kafka && echo && echo && echo && echo ===========Starting Logger=========== && cd ../pz-logger/config && vagrant up && vagrant reload && echo && echo && echo && echo ===========Starting pz-uuidgen=========== && cd ../../pz-uuidgen/config && vagrant up && vagrant reload && echo && echo && echo && echo ===========Starting pz-workflow=========== && cd ../../pz-workflow/config && vagrant up && vagrant reload && echo && echo && vagrant global-status --prune && echo && echo\""
+
+: '
                         echo ===========Starting jobdb mongoDB instance===========
                         cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
                         vagrant up jobdb
@@ -262,6 +263,7 @@ do
                         vagrant global-status --prune
                         echo
                         echo
+'
                         echo "$WELCOME"
                         ;;
                 5)
@@ -391,6 +393,7 @@ do
                         echo "$WELCOME"
                         ;;
                 h)
+                        echo
                         echo
 						echo Following must be installed on the system: 
 						echo ------------------------------------------ 
