@@ -134,7 +134,7 @@ do
 						echo
 						sleep 2
                         echo ==========Building pz-gateway==========
-                        cd pz-gateway
+                        cd ../pz-gateway
                         mvn clean install
                         echo
                         echo
