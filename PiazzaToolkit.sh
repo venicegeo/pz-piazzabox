@@ -25,12 +25,11 @@ read -r -d '' WELCOME << EOM
 ###       ######### ###     ### ########  ######## ###     ###
 ==============================================================
 
-   --LOCAL DEPLOYMENT----     |    --LOCAL SERVICES----
-                              |
-   0. EASY START(~30 mins)    |    3. Start vagrant boxes
-   1. Clone/Pull projects     |    5. Stop vagrant boxes
-   2. Build projects          |    6. Destroy vagrant boxes
-   4. Start Piazza projects   |    7. List vagrant boxes
+   --PIAZZA APPS----           |    --REQUIRED SERVICES----
+   1. Clone/Pull projects      |    5. Stop vagrant boxes
+   2. Build projects           |    6. Destroy vagrant boxes
+   3. Start vagrant boxes      |    7. List vagrant boxes
+   4. Start Piazza projects    |
 
  *Type "h" for help, type "q" to quit
 ______________________________________________________________
@@ -50,6 +49,7 @@ do
                         echo
                         echo
                         echo
+                        sleep 3
 						echo "$WELCOME"
 						;;
                 1)
@@ -63,6 +63,7 @@ do
                         git clone https://github.com/venicegeo/pz-ingest.git
                         git clone https://github.com/venicegeo/pz-access.git
                         git clone https://github.com/venicegeo/pz-jobmanager.git
+                        git clone https://github.com/venicegeo/pz-search-query.git
                         git clone https://github.com/venicegeo/pz-search-metadata-ingest.git
                         git clone https://github.com/venicegeo/pz-servicecontroller.git
                         git clone https://github.com/venicegeo/kafka-devbox.git
@@ -89,6 +90,10 @@ do
                         echo
                         cd ../pz-search-metadata-ingest
                         echo pz-search-metadata-ingest update
+                        git pull
+                        echo
+                        cd ../pz-search-query
+                        echo pz-search-query update
                         git pull
                         echo
                         cd ../pz-servicecontroller
@@ -157,6 +162,14 @@ do
                         echo
                         echo
 						sleep 2
+                        echo ==========Building pz-search-query==========
+                        cd ../pz-search-query
+                        mvn clean install
+                        echo
+                        echo
+                        echo
+                        echo
+                        sleep 2
                         echo ==========Building pz-jobmanager==========
                         cd ../pz-jobmanager
                         mvn clean install
@@ -189,6 +202,7 @@ do
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-access... && cd pz-access && java -jar target/piazza-access-0.1.0.jar --vcap.services.pz-blobstore.credentials.access_key_id=${BLOBSTORE_ACCESS_KEY} --vcap.services.pz-blobstore.credentials.secret_access_key=${BLOBSTORE_SECRET_ACCESS_KEY} --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 \""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-jobmanager... && cd pz-jobmanager &&  java -jar target/piazza-jobmanager-0.1.0.jar --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 \""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-metadata-ingest... && cd pz-search-metadata-ingest && java -jar target/pz-search-metadata-ingest-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 \""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-query... && cd pz-search-query && java -jar target/pz-search-query-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 \""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-servicecontroller... && cd pz-servicecontroller && java -jar mainServiceController/target/piazzaServiceController-1.0.0.BUILD-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 --search.url=http://192.168.44.44:9200 --uuid.url=http://192.168.48.48:14800 \""
                         echo
                         echo
