@@ -348,7 +348,7 @@ do
                         echo
                         echo
                         echo
-                        echo ===========Destroying GeoServer===========
+                        echo ===========Destroying GeoServer============
                         cd ../../pz-access/config
                         vagrant destroy -f geoserver
                         vagrant status
