@@ -17,10 +17,10 @@ echo ==============================================================
 echo.
 echo    --LOCAL APPS----           ^|    --LOCAL SERVICES----
 echo                               ^|
-echo    0. EASY START(~30 mins)    ^|    3. Start vagrant boxes
-echo    1. Clone/Pull projects     ^|    5. Stop vagrant boxes
-echo    2. Build projects          ^|    6. Destroy vagrant boxes
-echo    4. Start Piazza projects   ^|    7. List vagrant boxes
+echo    1. Pull projects           ^|    5. Stop services
+echo    2. Build projects          ^|    6. Destroy services
+echo    3. Start local services    ^|    7. List running services
+echo    4. Start Piazza projects   ^|
 echo.
 echo  *Type h for help
 echo ______________________________________________________________
@@ -103,7 +103,7 @@ if %Var1%==0 (
 )
 
 if %Var1%==h (
-	start cmd /C "title Piazza Help & echo Following must be installed on the system: & echo ------------------------------------------ & echo -Vagrant: https://www.vagrantup.com/ & echo -Oracle VM VirtualBox 5.0.10: https://www.virtualbox.org/ & echo -Maven 3.3.x: https://maven.apache.org/ & echo -Java jdk1.8.x from http://www.oracle.com & echo. & echo. & echo Following environment variables should be set: & echo ---------------------------------------------- & echo JAVA_HOME Ex: JAVA_HOME=C:\Program Files\Java\jdk1.8.0_101 & echo vcap.services.pz-blobstore.credentials.access_key_id & echo vcap.services.pz-blobstore.credentials.secret_access_key & echo **You may also set the LOCAL_PIAZZA_REPO_PATH environment variable & echo    to point to preferred local directory containing existing repositories & echo. & pause"
+	start cmd /C "title Piazza Help & echo Following must be installed on the system: & echo ------------------------------------------ & echo -Vagrant: https://www.vagrantup.com/ & echo -Oracle VM VirtualBox 5.0.10: https://www.virtualbox.org/ & echo -Maven 3.3.x: https://maven.apache.org/ & echo -Java jdk1.8.x from http://www.oracle.com & echo. & echo. & echo Following environment variables should be set: & echo ---------------------------------------------- & echo JAVA_HOME Ex: JAVA_HOME=C:\Program Files\Java\jdk1.8.0_101 & echo vcap.services.pz-blobstore.credentials.access_key_id & echo vcap.services.pz-blobstore.credentials.secret_access_key & echo **You may also set the LOCAL_PIAZZA_REPO_PATH environment variable & echo    to point to preferred local directory containing existing repositories & echo. & echo. & echo Piazza Toolkit steps accomplish the following: & echo step 1: Will clone/pull repositories using git to a folder specified in LOCAL_PIAZZA_REPO_PATH environment variable. & echo step 2: Builds all cloned piazza repositories with maven. Maven must be installed and set in PATH. & echo step 3: Starts all required services MongoDB/ElasticSearch/PostGIS/GeoServer/Kafka/Logger/UUIDGEN/Workflow in individual vagrant managed local VMs. & echo step 4: Starts all java piazza apps locally on a new command/terminal window. Console output can be used for debugging purposes. Invididual app can be killed and restarted manually. & echo step 5: Gracefully stops local running service VMs MongoDB/ElasticSearch/PostGIS/GeoServer/Kafka/Logger/UUIDGEN/Workflow. Must be done before shutting down developer machine. & echo step 6: Destroys all local service VMs MongoDB/ElasticSearch/PostGIS/GeoServer/Kafka/Logger/UUIDGEN/Workflow. & echo step 7: Lists and prunes all global vagrant boxes existing on the developers host machine. & pause"
 )
 
 else (
