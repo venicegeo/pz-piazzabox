@@ -25,12 +25,21 @@ read -r -d '' WELCOME << EOM
 ###       ######### ###     ### ########  ######## ###     ###
 ==============================================================
 
-   --PIAZZA APPS----           |    --REQUIRED SERVICES----
-   1. Clone/Pull projects      |    5. Stop vagrant boxes
-   2. Build projects           |    6. Destroy vagrant boxes
-   3. Start vagrant boxes      |    7. List vagrant boxes
-   4. Start Piazza projects    |
+ --PIAZZA APPS----              | --REQUIRED SERVICES----
+  1. Clone/Update All Projects  |  5. Stop All Piazza Services
+  2. Build All Projects         |  6. Destroy All Piazza Services
+  3. Start All Piazza Services  |  7. List All Piazza Services
+  4. Start All Piazza Projects  |
 
+ ---------------------------------------------------------
+   
+ --MICROMANAGEMENT----
+  3a. Restart Individual Piazza Services
+  4a. Start Indivial Piazza Projects
+   
+ ----------------------------------------------------------
+
+ 
  *Type "h" for help, type "q" to quit
 ______________________________________________________________
 EOM
@@ -39,7 +48,7 @@ echo "$WELCOME"
 
 while true
 do
-        read -r -n 1 input
+        read -r -n 2 input
         case $input in
                 0)
                         # TODO
@@ -193,22 +202,6 @@ do
                         echo
                         echo "$WELCOME"
                         ;;
-                4)
-                        echo
-                        echo
-                        echo starting all piazza apps...
-                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-gateway... && cd pz-gateway && java -jar target/piazza-gateway-0.1.0.jar --access.prefix=localhost --jobmanager.url=http://localhost:8083 --access.url=http://localhost:8085 --ingest.url=http://localhost:8084 --servicecontroller.url=http://localhost:8088 --search.url=http://192.168.44.44:9200 --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 --workflow.url=http://192.168.50.50:14400 \""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-ingest... && cd pz-ingest && java -jar target/piazza-ingest-0.1.0.jar --vcap.services.pz-blobstore.credentials.access_key_id=${BLOBSTORE_ACCESS_KEY} --vcap.services.pz-blobstore.credentials.secret_access_key=${BLOBSTORE_SECRET_ACCESS_KEY} --search.url=http://192.168.44.44:9200 --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 --workflow.url=http://192.168.50.50:14400 \""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-access... && cd pz-access && java -jar target/piazza-access-0.1.0.jar --vcap.services.pz-blobstore.credentials.access_key_id=${BLOBSTORE_ACCESS_KEY} --vcap.services.pz-blobstore.credentials.secret_access_key=${BLOBSTORE_SECRET_ACCESS_KEY} --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 \""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-jobmanager... && cd pz-jobmanager &&  java -jar target/piazza-jobmanager-0.1.0.jar --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 \""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-metadata-ingest... && cd pz-search-metadata-ingest && java -jar target/pz-search-metadata-ingest-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 \""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-query... && cd pz-search-query && java -jar target/pz-search-query-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 \""
-                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-servicecontroller... && cd pz-servicecontroller && java -jar mainServiceController/target/piazzaServiceController-1.0.0.BUILD-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 --search.url=http://192.168.44.44:9200 --uuid.url=http://192.168.48.48:14800 \""
-                        echo
-                        echo
-                        echo
-                        echo "$WELCOME"
-                        ;;
                 3)
                         echo
                         echo
@@ -278,6 +271,139 @@ do
                         echo
                         echo
 '
+                        echo "$WELCOME"
+                        ;;
+                3a)
+                        echo
+                        echo
+						echo
+						echo --START INDIVIDUAL PIAZZA SERVICES--
+						echo ====================================
+						echo 0. "<<" GO BACK 
+						echo
+						echo 1. START MongoDB
+						echo 2. START GeoServer
+						echo 3. START PostGIS
+						echo 4. START ElasticSearch
+						echo 5. START Kafka
+						echo 6. START Logger
+						echo 7. START UuidGen
+						echo 8. START Workflow
+						echo
+						echo ________________________________
+						read -r -n 1 startappsselection
+						echo
+						echo
+						echo $startappsselection
+						case $startappsselection in
+						1)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config && vagrant reload jobdb && vagrant global-status --prune && echo && echo\""
+							;;
+						2)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-access/config && vagrant reload geoserver && vagrant global-status --prune && echo && echo\""
+							;;
+						3)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-ingest/config && vagrant reload && vagrant global-status --prune && echo && echo\""
+							;;
+						4)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-search-metadata-ingest/config && vagrant reload search && vagrant global-status --prune && echo && echo\""
+							;;
+						5)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox && vagrant reload zk && vagrant reload ca && vagrant reload kafka && vagrant global-status --prune && echo && echo\""
+							;;
+						6)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-logger/config && vagrant reload && vagrant global-status --prune && echo && echo\""
+							;;
+						7)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-uuidgen/config && vagrant reload && echo && vagrant global-status --prune && echo && echo\""
+							;;	
+						8)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-workflow/config && vagrant reload && echo && echo && vagrant global-status --prune && echo && echo\""
+							;;	
+						0)
+							echo
+							;;
+						esac
+                        echo "$WELCOME"
+                        ;;
+                4)
+                        echo
+                        echo
+                        echo starting all piazza apps...
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-gateway... && cd pz-gateway && java -jar target/piazza-gateway-0.1.0.jar --access.prefix=localhost --jobmanager.url=http://localhost:8083 --access.url=http://localhost:8085 --ingest.url=http://localhost:8084 --servicecontroller.url=http://localhost:8088 --search.url=http://192.168.44.44:9200 --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 --workflow.url=http://192.168.50.50:14400 \""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-ingest... && cd pz-ingest && java -jar target/piazza-ingest-0.1.0.jar --vcap.services.pz-blobstore.credentials.access_key_id=${BLOBSTORE_ACCESS_KEY} --vcap.services.pz-blobstore.credentials.secret_access_key=${BLOBSTORE_SECRET_ACCESS_KEY} --search.url=http://192.168.44.44:9200 --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 --workflow.url=http://192.168.50.50:14400 \""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-access... && cd pz-access && java -jar target/piazza-access-0.1.0.jar --vcap.services.pz-blobstore.credentials.access_key_id=${BLOBSTORE_ACCESS_KEY} --vcap.services.pz-blobstore.credentials.secret_access_key=${BLOBSTORE_SECRET_ACCESS_KEY} --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 \""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-jobmanager... && cd pz-jobmanager &&  java -jar target/piazza-jobmanager-0.1.0.jar --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 \""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-metadata-ingest... && cd pz-search-metadata-ingest && java -jar target/pz-search-metadata-ingest-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 \""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-query... && cd pz-search-query && java -jar target/pz-search-query-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 \""
+                        osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-servicecontroller... && cd pz-servicecontroller && java -jar mainServiceController/target/piazzaServiceController-1.0.0.BUILD-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 --search.url=http://192.168.44.44:9200 --uuid.url=http://192.168.48.48:14800 \""
+                        echo
+                        echo
+                        echo
+                        echo "$WELCOME"
+                        ;;
+                4a)
+                        echo
+                        echo
+						echo
+						echo --START INDIVIDUAL PIAZZA APPS--
+						echo ================================
+						echo 0. "<<" GO BACK 
+						echo
+						echo 1. START pz-gateway
+						echo 2. START pz-ingest
+						echo 3. START pz-access
+						echo 4. START pz-jobmanager
+						echo 5. START pz-search-metadata-ingest
+						echo 6. START pz-search-query
+						echo 7. START pz-servicecontroller
+						echo
+						echo ________________________________
+						read -r -n 1 startappsselection
+						echo
+						echo
+						echo $startappsselection
+						case $startappsselection in
+						1)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-gateway... && cd pz-gateway && java -jar target/piazza-gateway-0.1.0.jar --access.prefix=localhost --jobmanager.url=http://localhost:8083 --access.url=http://localhost:8085 --ingest.url=http://localhost:8084 --servicecontroller.url=http://localhost:8088 --search.url=http://192.168.44.44:9200 --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 --workflow.url=http://192.168.50.50:14400 \""
+							;;
+						2)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-ingest... && cd pz-ingest && java -jar target/piazza-ingest-0.1.0.jar --vcap.services.pz-blobstore.credentials.access_key_id=${BLOBSTORE_ACCESS_KEY} --vcap.services.pz-blobstore.credentials.secret_access_key=${BLOBSTORE_SECRET_ACCESS_KEY} --search.url=http://192.168.44.44:9200 --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 --workflow.url=http://192.168.50.50:14400 \""
+							;;
+						3)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-access... && cd pz-access && java -jar target/piazza-access-0.1.0.jar --vcap.services.pz-blobstore.credentials.access_key_id=${BLOBSTORE_ACCESS_KEY} --vcap.services.pz-blobstore.credentials.secret_access_key=${BLOBSTORE_SECRET_ACCESS_KEY} --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 \""
+							;;
+						4)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-jobmanager... && cd pz-jobmanager &&  java -jar target/piazza-jobmanager-0.1.0.jar --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 \""
+							;;
+						5)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-metadata-ingest... && cd pz-search-metadata-ingest && java -jar target/pz-search-metadata-ingest-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 \""
+							;;
+						6)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-query... && cd pz-search-query && java -jar target/pz-search-query-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 \""
+							;;
+						7)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-servicecontroller... && cd pz-servicecontroller && java -jar mainServiceController/target/piazzaServiceController-1.0.0.BUILD-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 --search.url=http://192.168.44.44:9200 --uuid.url=http://192.168.48.48:14800 \""
+							;;	
+						0)
+							echo
+							;;
+						esac
                         echo "$WELCOME"
                         ;;
                 5)
