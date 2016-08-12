@@ -556,6 +556,16 @@ do
 						echo
                         echo To persist the env variables, please add them to ~/.bash_profile, re-login.
                         echo
+						echo Piazza Toolkit steps accomplish the following:
+						echo "    "STEP 1: Will clone/pull repositories using git to a folder specified in LOCAL_PIAZZA_REPO_PATH environment variable.
+						echo "    "STEP 2: Builds all cloned piazza repositories with maven. Maven must be installed and set in PATH.
+						echo "    "STEP 3: Starts all required services MongoDB/ElasticSearch/PostGIS/GeoServer/Kafka/Logger/UUIDGEN/Workflow in individual vagrant managed local VMs.
+						echo "    "STEP 4: Starts all java piazza apps locally on a new command/terminal window. Console output can be used for debugging purposes. Invididual app can be killed and restarted manually.
+						echo "    "STEP 5: Gracefully stops local running service VMs MongoDB/ElasticSearch/PostGIS/GeoServer/Kafka/Logger/UUIDGEN/Workflow. Must be done before shutting down developer machine.
+						echo "    "STEP 6: Destroys all local service VMs MongoDB/ElasticSearch/PostGIS/GeoServer/Kafka/Logger/UUIDGEN/Workflow.
+						echo "    "STEP 7: Lists and prunes all global vagrant boxes existing on the developers host machine.
+						echo "    "STEP 3a: This option allows to start/restart specific service VMs, which is a lot quicker.
+						echo "    "STEP 4a: This option allows to start specific piazza apps.
                         echo
                         sleep 1
                         echo "$WELCOME"
