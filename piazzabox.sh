@@ -48,7 +48,7 @@ echo "$WELCOME"
 
 while true
 do
-        read -r -n 2 input
+        read -r input
         case $input in
                 0)
                         # TODO
@@ -291,42 +291,42 @@ do
 						echo 8. START Workflow
 						echo
 						echo ________________________________
-						read -r -n 1 startappsselection
+						read -r startappsselection
 						echo
 						echo
 						echo $startappsselection
 						case $startappsselection in
 						1)
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config && vagrant reload jobdb && vagrant global-status --prune && echo && echo\""
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config && vagrant up jobdb && vagrant global-status --prune && echo && echo\""
 							;;
 						2)
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-access/config && vagrant reload geoserver && vagrant global-status --prune && echo && echo\""
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-access/config && vagrant up geoserver && vagrant global-status --prune && echo && echo\""
 							;;
 						3)
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-ingest/config && vagrant reload && vagrant global-status --prune && echo && echo\""
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-ingest/config && vagrant up && vagrant global-status --prune && echo && echo\""
 							;;
 						4)
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-search-metadata-ingest/config && vagrant reload search && vagrant global-status --prune && echo && echo\""
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-search-metadata-ingest/config && vagrant up search && vagrant global-status --prune && echo && echo\""
 							;;
 						5)
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox && vagrant reload zk && vagrant reload ca && vagrant reload kafka && vagrant global-status --prune && echo && echo\""
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox && vagrant up zk && vagrant up ca && vagrant up kafka && vagrant global-status --prune && echo && echo\""
 							;;
 						6)
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-logger/config && vagrant reload && vagrant global-status --prune && echo && echo\""
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-logger/config && vagrant up && vagrant global-status --prune && echo && echo\""
 							;;
 						7)
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-uuidgen/config && vagrant reload && echo && vagrant global-status --prune && echo && echo\""
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-uuidgen/config && vagrant up && echo && vagrant global-status --prune && echo && echo\""
 							;;	
 						8)
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-workflow/config && vagrant reload && echo && echo && vagrant global-status --prune && echo && echo\""
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-workflow/config && vagrant up && echo && echo && vagrant global-status --prune && echo && echo\""
 							;;	
 						0)
 							echo
@@ -367,7 +367,7 @@ do
 						echo 7. START pz-servicecontroller
 						echo
 						echo ________________________________
-						read -r -n 1 startappsselection
+						read -r startappsselection
 						echo
 						echo
 						echo $startappsselection
