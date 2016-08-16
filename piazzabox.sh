@@ -34,6 +34,7 @@ read -r -d '' WELCOME << EOM
  ---------------------------------------------------------
    
  --MICROMANAGEMENT----
+  2a. Restart Individual Piazza Services
   3a. Restart Individual Piazza Services
   4a. Start Indivial Piazza Projects
    
@@ -226,37 +227,99 @@ do
 						echo $buildappsselection
 						case $buildappsselection in
 						1)
+							cd $LOCAL_PIAZZA_REPO_PATH
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config && vagrant up jobdb && vagrant global-status --prune && echo && echo\""
+							echo
+							echo ==========Building pz-gateway==========
+							cd pz-gateway
+							mvn clean install
+							echo
+							echo
+							echo
+							echo
 							;;
 						2)
+							cd $LOCAL_PIAZZA_REPO_PATH
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-access/config && vagrant up geoserver && vagrant global-status --prune && echo && echo\""
+							echo
+							echo ==========Building pz-access==========
+							cd pz-access
+							mvn clean install
+							echo
+							echo
+							echo
+							echo
 							;;
 						3)
+							cd $LOCAL_PIAZZA_REPO_PATH
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-ingest/config && vagrant up && vagrant global-status --prune && echo && echo\""
+							echo
+							echo ==========Building pz-ingest==========
+							cd pz-ingest
+							mvn clean install
+							echo
+							echo
+							echo
+							echo
 							;;
 						4)
+							cd $LOCAL_PIAZZA_REPO_PATH
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-search-metadata-ingest/config && vagrant up search && vagrant global-status --prune && echo && echo\""
+							echo
+							echo ==========Building pz-search-query==========
+							cd pz-search-query
+							mvn clean install
+							echo
+							echo
+							echo
+							echo
 							;;
 						5)
+							cd $LOCAL_PIAZZA_REPO_PATH
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox && vagrant up zk && vagrant up ca && vagrant up kafka && vagrant global-status --prune && echo && echo\""
+							echo
+							echo ==========Building pz-jobmanager==========
+							cd pz-jobmanager
+							mvn clean install
+							echo
+							echo
+							echo
+							echo
 							;;
 						6)
+							cd $LOCAL_PIAZZA_REPO_PATH
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-logger/config && vagrant up && vagrant global-status --prune && echo && echo\""
+							echo
+							echo ==========Building pz-search-metadata-ingest==========
+							cd pz-search-metadata-ingest
+							mvn clean install
+							echo
+							echo
+							echo
+							echo
 							;;
 						7)
+							cd $LOCAL_PIAZZA_REPO_PATH
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-uuidgen/config && vagrant up && echo && vagrant global-status --prune && echo && echo\""
-							;;	
+							echo
+							echo ==========Building pz-servicecontroller==========
+							cd pz-servicecontroller/mainServiceController
+							mvn clean install
+							echo
+							echo
+							;;
 						8)
+							cd $LOCAL_PIAZZA_REPO_PATH
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-workflow/config && vagrant up && echo && echo && vagrant global-status --prune && echo && echo\""
-							;;	
+							echo
+							echo ==========Building pz-jobcommon==========
+							cd pz-jobcommon 
+							mvn clean install
+							echo
+							echo
+							echo
+							echo
+							;;
 						0)
 							echo
 							;;
@@ -274,64 +337,6 @@ do
                         echo
 						# below line should start all on a new terminal
 						osascript -e "tell app \"Terminal\" to do script \"echo ===========Starting jobdb mongoDB instance=========== && cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config && vagrant up jobdb && echo && echo && echo ===========Starting GeoServer=========== && cd ../../pz-access/config && vagrant up geoserver && echo && echo && echo && echo ===========Starting PostGIS=========== && cd ../../pz-ingest/config && vagrant up postgis && echo && echo && echo && echo ===========Starting ElasticSearch=========== && cd ../../pz-search-metadata-ingest/config && vagrant up search && echo && echo && echo  && echo ===========Starting Kafka boxes=========== && cd ../../kafka-devbox && vagrant up zk && vagrant up ca && vagrant up kafka && echo && echo && echo && echo ===========Starting Logger=========== && cd ../pz-logger/config && vagrant up && vagrant reload && echo && echo && echo && echo ===========Starting pz-uuidgen=========== && cd ../../pz-uuidgen/config && vagrant up && vagrant reload && echo && echo && echo && echo ===========Starting pz-workflow=========== && cd ../../pz-workflow/config && vagrant up && vagrant reload && echo && echo && vagrant global-status --prune && echo && echo\""
-
-: '
-                        echo ===========Starting jobdb mongoDB instance===========
-                        cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
-                        vagrant up jobdb
-                        echo
-                        echo
-                        echo
-                        echo ===========Starting GeoServer===========
-                        cd ../../pz-access/config
-                        vagrant up geoserver
-                        echo
-                        echo
-                        echo
-                        echo ===========Starting PostGIS===========
-                        cd ../../pz-ingest/config
-                        vagrant up postgis
-                        echo
-                        echo
-                        echo
-                        echo ===========Starting ElasticSearch===========
-                        cd ../../pz-search-metadata-ingest/config
-                        vagrant up search
-                        echo
-                        echo
-                        echo
-                        echo ===========Starting Kafka boxes===========
-                        cd ../../kafka-devbox
-                        vagrant up zk
-                        vagrant up ca
-                        vagrant up kafka
-                        echo
-                        echo
-                        echo
-						echo ===========Starting Logger===========
-						cd ../pz-logger/config
-						vagrant up
-						vagrant reload
-                        echo
-                        echo
-                        echo
-						echo ===========Starting pz-uuidgen===========
-						cd ../../pz-uuidgen/config
-						vagrant up
-						vagrant reload
-						echo
-						echo
-						echo
-						echo ===========Starting pz-workflow===========
-						cd ../../pz-workflow/config
-						vagrant up
-						vagrant reload
-                        echo
-                        echo
-                        vagrant global-status --prune
-                        echo
-                        echo
-'
                         echo "$WELCOME"
                         ;;
                 3a)
