@@ -202,6 +202,67 @@ do
                         echo
                         echo "$WELCOME"
                         ;;
+                2a)
+                        echo
+                        echo
+						echo
+						echo --BUILD INDIVIDUAL PIAZZA PROJECTS--
+						echo ====================================
+						echo 0. "<<" GO BACK 
+						echo
+						echo 1. BUILD pz-gateway
+						echo 2. BUILD pz-access
+						echo 3. BUILD pz-ingest
+						echo 4. BUILD pz-search-query
+						echo 5. BUILD pz-jobmanager
+						echo 6. BUILD pz-search-metadata-ingest
+						echo 7. BUILD pz-servicecontroller
+						echo 8. BUILD pz-jobcommon
+						echo
+						echo ________________________________
+						read -r buildappsselection
+						echo
+						echo
+						echo $buildappsselection
+						case $buildappsselection in
+						1)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config && vagrant up jobdb && vagrant global-status --prune && echo && echo\""
+							;;
+						2)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-access/config && vagrant up geoserver && vagrant global-status --prune && echo && echo\""
+							;;
+						3)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-ingest/config && vagrant up && vagrant global-status --prune && echo && echo\""
+							;;
+						4)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-search-metadata-ingest/config && vagrant up search && vagrant global-status --prune && echo && echo\""
+							;;
+						5)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox && vagrant up zk && vagrant up ca && vagrant up kafka && vagrant global-status --prune && echo && echo\""
+							;;
+						6)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-logger/config && vagrant up && vagrant global-status --prune && echo && echo\""
+							;;
+						7)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-uuidgen/config && vagrant up && echo && vagrant global-status --prune && echo && echo\""
+							;;	
+						8)
+							echo
+							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-workflow/config && vagrant up && echo && echo && vagrant global-status --prune && echo && echo\""
+							;;	
+						0)
+							echo
+							;;
+						esac
+                        echo "$WELCOME"
+                        ;;
                 3)
                         echo
                         echo
