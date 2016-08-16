@@ -27,16 +27,16 @@ read -r -d '' WELCOME << EOM
 
  --PIAZZA APPS----              | --REQUIRED SERVICES----
   1. Clone/Update All Projects  |  5. Stop All Piazza Services
-  2. Build All Projects         |  6. Destroy All Piazza Services
+  2. Compile All Projects       |  6. Destroy All Piazza Services
   3. Start All Piazza Services  |  7. List All Piazza Services
   4. Start All Piazza Projects  |
 
  ---------------------------------------------------------
    
  --MICROMANAGEMENT----
-  2a. Restart Individual Piazza Services
-  3a. Restart Individual Piazza Services
-  4a. Start Indivial Piazza Projects
+  a. Compile Individual Piazza Projects
+  b. Start/Stop Individual Piazza Services
+  c. Start Indivial Piazza Projects
    
  ----------------------------------------------------------
 
@@ -203,7 +203,7 @@ do
                         echo
                         echo "$WELCOME"
                         ;;
-                2a)
+                a)
                         echo
                         echo
 						echo
@@ -339,7 +339,7 @@ do
 						osascript -e "tell app \"Terminal\" to do script \"echo ===========Starting jobdb mongoDB instance=========== && cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config && vagrant up jobdb && echo && echo && echo ===========Starting GeoServer=========== && cd ../../pz-access/config && vagrant up geoserver && echo && echo && echo && echo ===========Starting PostGIS=========== && cd ../../pz-ingest/config && vagrant up postgis && echo && echo && echo && echo ===========Starting ElasticSearch=========== && cd ../../pz-search-metadata-ingest/config && vagrant up search && echo && echo && echo  && echo ===========Starting Kafka boxes=========== && cd ../../kafka-devbox && vagrant up zk && vagrant up ca && vagrant up kafka && echo && echo && echo && echo ===========Starting Logger=========== && cd ../pz-logger/config && vagrant up && vagrant reload && echo && echo && echo && echo ===========Starting pz-uuidgen=========== && cd ../../pz-uuidgen/config && vagrant up && vagrant reload && echo && echo && echo && echo ===========Starting pz-workflow=========== && cd ../../pz-workflow/config && vagrant up && vagrant reload && echo && echo && vagrant global-status --prune && echo && echo\""
                         echo "$WELCOME"
                         ;;
-                3a)
+                b)
                         echo
                         echo
 						echo
@@ -362,6 +362,39 @@ do
 						echo
 						echo $startappsselection
 						case $startappsselection in
+						a)
+							echo
+							echo 0. "<<" GO BACK 
+							echo
+							echo 1. START MongoDB
+							echo 2. STOP MongoDB
+							echo 3. RESTART MongoDB
+							echo
+							read -r servicemicromanagement
+							echo
+							echo
+							echo $servicemicromanagement
+							case $servicemicromanagement in
+							1)
+								echo Starting MongoDB
+								cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
+								vagrant up jobdb
+								vagrant status
+								;;
+							2)
+								echo Stopping MongoDB
+								cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
+								vagrant halt jobdb
+								vagrant status
+								;;
+							3)
+								echo Restarting MongoDB
+								cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config
+								vagrant reload jobdb
+								vagrant status
+								;;
+							esac
+							;;
 						1)
 							echo
 							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config && vagrant up jobdb && vagrant global-status --prune && echo && echo\""
@@ -416,7 +449,7 @@ do
                         echo
                         echo "$WELCOME"
                         ;;
-                4a)
+                c)
                         echo
                         echo
 						echo
