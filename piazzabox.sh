@@ -26,19 +26,19 @@ read -r -d '' WELCOME << EOM
 ==============================================================
 
  --PIAZZA APPS----              | --REQUIRED SERVICES----
-  1. Clone/Update All Projects  |  5. Stop All Piazza Services
-  2. Compile All Projects       |  6. Destroy All Piazza Services
-  3. Start All Piazza Services  |  7. List All Piazza Services
+  1. Clone/Update All Projects  |  5. Stop All Services
+  2. Compile All Projects       |  6. Destroy All Services
+  3. Start All Piazza Services  |  7. List All Services
   4. Start All Piazza Projects  |
 
- ---------------------------------------------------------
+ -------------------------------------------------------------
    
  --MICROMANAGEMENT----
   a. Compile Individual Piazza Projects
   b. Start/Stop Individual Piazza Services
   c. Start Indivial Piazza Projects
    
- ----------------------------------------------------------
+ -------------------------------------------------------------
 
  
  *Type "h" for help, type "q" to quit
@@ -343,8 +343,8 @@ do
                         echo
                         echo
 						echo
-						echo --START INDIVIDUAL PIAZZA SERVICES--
-						echo ====================================
+						echo --START/STOP/RESTART INDIVIDUAL PIAZZA SERVICES--
+						echo =================================================
 						echo 0. "<<" GO BACK 
 						echo
 						echo 1. START MongoDB
@@ -362,7 +362,7 @@ do
 						echo
 						echo $startappsselection
 						case $startappsselection in
-						a)
+						1)
 							echo
 							echo 0. "<<" GO BACK 
 							echo
@@ -395,25 +395,182 @@ do
 								;;
 							esac
 							;;
-						1)
-							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-jobmanager/config && vagrant up jobdb && vagrant global-status --prune && echo && echo\""
-							;;
 						2)
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-access/config && vagrant up geoserver && vagrant global-status --prune && echo && echo\""
+							echo 0. "<<" GO BACK 
+							echo
+							echo 1. START GeoServer
+							echo 2. STOP GeoServer
+							echo 3. RESTART GeoServer
+							echo
+							read -r servicemicromanagement
+							echo
+							echo
+							echo $servicemicromanagement
+							case $servicemicromanagement in
+							1)
+								echo Starting GeoServer
+								cd $LOCAL_PIAZZA_REPO_PATH/pz-access/config
+								vagrant up geoserver
+								vagrant status
+								;;
+							2)
+								echo Stopping GeoServer
+								cd $LOCAL_PIAZZA_REPO_PATH/pz-access/config
+								vagrant halt geoserver
+								vagrant status
+								;;
+							3)
+								echo Restarting GeoServer
+								cd $LOCAL_PIAZZA_REPO_PATH/pz-access/config
+								vagrant reload geoserver
+								vagrant status
+								;;
+							esac
 							;;
 						3)
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-ingest/config && vagrant up && vagrant global-status --prune && echo && echo\""
+							echo 0. "<<" GO BACK 
+							echo
+							echo 1. START PostGIS
+							echo 2. STOP PostGIS
+							echo 3. RESTART PostGIS
+							echo
+							read -r servicemicromanagement
+							echo
+							echo
+							echo $servicemicromanagement
+							case $servicemicromanagement in
+							1)
+								echo Starting PostGIS
+								cd $LOCAL_PIAZZA_REPO_PATH/pz-ingest/config
+								vagrant up postgis
+								vagrant status
+								;;
+							2)
+								echo Stopping PostGIS
+								cd $LOCAL_PIAZZA_REPO_PATH/pz-ingest/config
+								vagrant halt postgis
+								vagrant status
+								;;
+							3)
+								echo Restarting PostGIS
+								cd $LOCAL_PIAZZA_REPO_PATH/pz-ingest/config
+								vagrant reload postgis
+								vagrant status
+								;;
+							esac
 							;;
 						4)
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/pz-search-metadata-ingest/config && vagrant up search && vagrant global-status --prune && echo && echo\""
+							echo 0. "<<" GO BACK 
+							echo
+							echo 1. START ElasticSearch
+							echo 2. STOP ElasticSearch
+							echo 3. RESTART ElasticSearch
+							echo
+							read -r servicemicromanagement
+							echo
+							echo
+							echo $servicemicromanagement
+							case $servicemicromanagement in
+							1)
+								echo Starting ElasticSearch
+								cd $LOCAL_PIAZZA_REPO_PATH/pz-search-metadata-ingest/config
+								vagrant up search
+								vagrant status
+								;;
+							2)
+								echo Stopping ElasticSearch
+								cd $LOCAL_PIAZZA_REPO_PATH/pz-search-metadata-ingest/config
+								vagrant halt search
+								vagrant status
+								;;
+							3)
+								echo Restarting ElasticSearch
+								cd $LOCAL_PIAZZA_REPO_PATH/pz-search-metadata-ingest/config
+								vagrant reload search
+								vagrant status
+								;;
+							esac
 							;;
 						5)
 							echo
-							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox && vagrant up zk && vagrant up ca && vagrant up kafka && vagrant global-status --prune && echo && echo\""
+							echo 0. "<<" GO BACK 
+							echo
+							echo 1. START Kafka
+							echo 2. STOP Kafka
+							echo 3. RESTART Kafka
+							echo ----------------
+							echo 4. START Zk
+							echo 5. STOP Zk
+							echo 6. RESTART Zk
+							echo ----------------
+							echo 7. START Ca
+							echo 8. STOP Ca
+							echo 9. RESTART Ca
+							echo ________________
+							echo
+							read -r servicemicromanagement
+							echo
+							echo
+							echo $servicemicromanagement
+							case $servicemicromanagement in
+							1)
+								echo Starting ElasticSearch
+								cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox
+								vagrant up kafka
+								vagrant status
+								;;
+							2)
+								echo Stopping ElasticSearch
+								cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox
+								vagrant suspend kafka
+								vagrant status
+								;;
+							3)
+								echo Restarting ElasticSearch
+								cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox
+								vagrant reload kafka
+								vagrant status
+								;;
+							4)
+								echo Starting ElasticSearch
+								cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox
+								vagrant up zk
+								vagrant status
+								;;
+							5)
+								echo Stopping ElasticSearch
+								cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox
+								vagrant suspend zk
+								vagrant status
+								;;
+							6)
+								echo Restarting ElasticSearch
+								cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox
+								vagrant reload zk
+								vagrant status
+								;;
+							7)
+								echo Starting ElasticSearch
+								cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox
+								vagrant up ca
+								vagrant status
+								;;
+							8)
+								echo Stopping ElasticSearch
+								cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox
+								vagrant suspend ca
+								vagrant status
+								;;
+							9)
+								echo Restarting ElasticSearch
+								cd $LOCAL_PIAZZA_REPO_PATH/kafka-devbox
+								vagrant reload ca
+								vagrant status
+								;;
+							esac
 							;;
 						6)
 							echo
