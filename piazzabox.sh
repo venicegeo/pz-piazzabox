@@ -57,8 +57,6 @@ do
                         echo
                         echo UNDER CONSTUCTION...
                         echo
-                        echo
-                        echo
                         sleep 3
 						echo "$WELCOME"
 						;;
@@ -601,6 +599,11 @@ do
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-metadata-ingest... && cd pz-search-metadata-ingest && java -jar target/pz-search-metadata-ingest-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 \""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-search-query... && cd pz-search-query && java -jar target/pz-search-query-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 \""
                         osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-servicecontroller... && cd pz-servicecontroller && java -jar mainServiceController/target/piazzaServiceController-1.0.0.BUILD-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 --search.url=http://192.168.44.44:9200 --uuid.url=http://192.168.48.48:14800 \""
+                        osascript -e "tell app \"Terminal\" to do script \"echo trying to run logger && cd $LOCAL_PIAZZA_REPO_PATH && pz-logger-startup/logger_startup.sh\""
+                        sleep 2
+                        osascript -e "tell app \"Terminal\" to do script \"echo trying to run uuidgen && cd $LOCAL_PIAZZA_REPO_PATH && pz-uuidgen-startup/uuidgen_startup.sh\""
+                        sleep 2
+                        osascript -e "tell app \"Terminal\" to do script \"echo trying to run workflow && cd $LOCAL_PIAZZA_REPO_PATH && pz-workflow-startup/workflow_startup.sh\""
                         echo
                         echo
                         echo
@@ -614,13 +617,16 @@ do
 						echo ================================
 						echo 0. "<<" GO BACK 
 						echo
-						echo 1. START pz-gateway
-						echo 2. START pz-ingest
-						echo 3. START pz-access
-						echo 4. START pz-jobmanager
-						echo 5. START pz-search-metadata-ingest
-						echo 6. START pz-search-query
-						echo 7. START pz-servicecontroller
+						echo 1.  START pz-gateway
+						echo 2.  START pz-ingest
+						echo 3.  START pz-access
+						echo 4.  START pz-jobmanager
+						echo 5.  START pz-search-metadata-ingest
+						echo 6.  START pz-search-query
+						echo 7.  START pz-servicecontroller
+                        echo 8.  START pz-logger
+                        echo 9.  START pz-uuidgen
+                        echo 10. START pz-workflow
 						echo
 						echo ________________________________
 						read -r startappsselection
@@ -655,7 +661,14 @@ do
 						7)
 							echo
 							osascript -e "tell app \"Terminal\" to do script \"cd $LOCAL_PIAZZA_REPO_PATH && echo Starting pz-servicecontroller... && cd pz-servicecontroller && java -jar mainServiceController/target/piazzaServiceController-1.0.0.BUILD-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 --search.url=http://192.168.44.44:9200 --uuid.url=http://192.168.48.48:14800 \""
-							;;	
+							;;
+                        8)
+                            echo
+                            # start new terminal and do all the steps there.
+							osascript -e "tell app \"Terminal\" to do script \"export GOPATH=$LOCAL_PIAZZA_REPO_PATH/pz-logger/appbuild && export VCAP_SERVICES='{\"user-provided\":[{\"credentials\":{\"host\":\"192.168.44.44:9200\",\"hostname\":\"192.168.44.44\",\"port\":\"9200\"},\"label\":\"user-provided\",\"name\":\"pz-elasticsearch\",\"syslog_drain_url\":\"\",\"tags\":[]}]}' \""
+
+#osascript -e "tell app \"Terminal\" to do script \"export GOPATH=$LOCAL_PIAZZA_REPO_PATH/pz-logger/appbuild && export VCAP_SERVICES='{\"user-provided\":[{\"credentials\":{\"host\":\"192.168.44.44:9200\",\"hostname\":\"192.168.44.44\",\"port\":\"9200\"},\"label\":\"user-provided\",\"name\":\"pz-elasticsearch\",\"syslog_drain_url\":\"\",\"tags\":[]}]}' && export PORT=14600 && export VCAP_APPLICATION='{\"application_id\": \"14fca253-8081-402e-abf5-8fd40ddda81f\",\"application_name\": \"pz-logger\","application_uris\": [\"pz-logger.int.geointservices.io\"],\"application_version\": \"5f0ee99-q252c-4f8d-b241-bc3e22534afc\",\"limits\": {\"disk\": 1024,\"fds\": 16384,\"mem\": 512},\"name\": \"pz-logger\",\"space_id\": \"d65a0987-df00-4d69-a50b-657e52cb2f8e\",\"space_name\": \"simulator-stage\",\"uris\": [\"pz-logger.int.geointservices.io\"],\"users\": null,\"version\": \"5f0ee99d-252c-4f8d-b241-bc3e22534afc\"}' && cd $GOPATH && go get github.com/venicegeo/pz-logger && go install github.com/venicegeo/pz-logger && $GOPATH/bin/pz-logger \""
+                            ;;
 						0)
 							echo
 							;;
