@@ -824,7 +824,19 @@ do
 						echo    to point to preferred local directory containing existing repositories
 						echo
                         echo To persist the env variables, please add them to ~/.bash_profile, re-login.
+						echo
+						echo You may also need to add settings.xml with following content to .m2 folder for access to nexus:
+						echo	""\<settings\>
+						echo	"  "\<servers\>
+						echo	"    "\<server\>
+						echo	"      "\<id\>nexus\</id\>
+						echo	"      "\<username\>username\</username\>
+						echo	"      "\<password\>password\</password\>
+						echo	"    "\</server\>
+						echo	"  "\</servers\>
+						echo	""\</settings\>
                         echo
+						echo
 						echo Piazza Toolkit steps accomplish the following:
 						echo "    "STEP 1: Will clone/pull repositories using git to a folder specified in LOCAL_PIAZZA_REPO_PATH environment variable.
 						echo "    "STEP 2: Builds all cloned piazza repositories with maven. Maven must be installed and set in PATH.
@@ -833,8 +845,9 @@ do
 						echo "    "STEP 5: Gracefully stops local running service VMs MongoDB/ElasticSearch/PostGIS/GeoServer/Kafka/Logger/UUIDGEN/Workflow. Must be done before shutting down developer machine.
 						echo "    "STEP 6: Destroys all local service VMs MongoDB/ElasticSearch/PostGIS/GeoServer/Kafka/Logger/UUIDGEN/Workflow.
 						echo "    "STEP 7: Lists and prunes all global vagrant boxes existing on the developers host machine.
-						echo "    "STEP 3a: This option allows to start/restart specific service VMs, which is a lot quicker.
-						echo "    "STEP 4a: This option allows to start specific piazza apps.
+						echo "    "STEP a: This option allows to compile specific piazza apps.
+						echo "    "STEP b: This option allows to start/restart specific service VMs, a lot quicker.
+						echo "    "STEP c: This option allows to start specific piazza apps.
                         echo
                         sleep 1
                         echo "$WELCOME"
