@@ -80,7 +80,7 @@ if %Var1%==4 (
  	start cmd /C "title PZ-JOBMANAGER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-jobmanager... & cd pz-jobmanager & java -jar target/piazza-jobmanager-0.1.0.jar --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 & pause"
  	start cmd /C "title PZ-SEARCH-METADATA-INGEST & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-search-metadata-ingest... & cd pz-search-metadata-ingest & java -jar target/pz-search-metadata-ingest-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 & pause"
 	start cmd /C "title PZ-SEARCH-QUERY & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-search-query... & cd pz-search-query & java -jar target/pz-search-query-0.0.1-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 & pause"
- 	start cmd /C "title PZ-SERVICECONTROLLER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-servicecontroller... & cd pz-servicecontroller & java -jar mainServiceController/target/piazzaServiceController-1.0.0.BUILD-SNAPSHOT.jar --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 & pause"
+ 	start cmd /C "title PZ-SERVICECONTROLLER & echo. & cd %LOCAL_PIAZZA_REPO_PATH% & echo Starting pz-servicecontroller... & cd pz-servicecontroller & java -jar mainServiceController/target/piazzaServiceController-1.0.0.BUILD-SNAPSHOT.jar --workflow.url=http://192.168.50.50:14400 --logger.url=http://192.168.46.46:14600 --uuid.url=http://192.168.48.48:14800 & pause"
 )
 
 rem Gracefully shutdown of all running vagrant services created by piazza toolkit
